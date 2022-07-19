@@ -1,0 +1,66 @@
+{% extends 'layout.html'%}
+
+{% block title %} patient file {% endblock %}
+
+{% block body %}
+<section>
+
+<h1>patient personal information</h1>
+{{selected_patient_name}}
+<table>
+    <tr>
+      <th>id</th>
+      <th>patient name</th>
+      <th>gender</th>
+      <th>birth year</th>
+      <th>adress</th>
+      <th>phonr number</th>
+      <th>email</th>
+
+    </tr>
+    {% for patient in patient_info %}
+        <tr>
+        <td>{{ patient['id'] }}</td>
+        <td>{{ patient['patient_name'] }}</td>
+        <td>{{ patient['gender'] }}</td>
+        <td>{{ patient['birth_year'] }}</td>
+        <td>{{ patient['adress'] }}</td>
+        <td>{{ patient['phone_number'] }}</td>
+        <td>{{ patient['email'] }}</td>
+        
+        </tr>
+    {% endfor %}
+  </table>
+{{selected_patient_name}}
+
+</section>
+
+<section>
+    <h1>TODO procedures</h1>
+{{selected_patient_name}}
+
+</section>
+
+<section>
+    <h1>add new procedure</h1>
+{{selected_patient_name}}
+
+    <form action="/added_procedure" method="post">
+        <label for="procedure_type">procedure type</label>
+        <input type="text" name="procedure_type">
+
+        <label for="teeth">teeth</label>
+        <input type="text" name="teeth">
+
+        <label for="price">price</label>
+        <input type="number" name="price">
+{{selected_patient_name}}
+{{selected_patient_name}}
+<input type="hidden" name="patient_name" value="{{selected_patient_name}}">{{selected_patient_name}}
+
+        <input type="submit" value="sibmit">
+    </form>
+{{selected_patient_name}}
+    
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %} register {% endblock %}
+
+{% block body %}
+
+    <form action="/added_doctor" method="post">
+        <label for="name">name</label>
+        <input type="text" name="name">
+
+        <label for="gender">gender</label>
+        <input type="text" name="gender">
+
+        <label for="speciality">speciality</label>
+        <input type="text" name="speciality">
+
+        <label for="email">email</label>
+        <input type="email" name="email">
+
+        <label for="doctor_password">password</label>
+        <input type="text" name="doctor_password">
+
+        <input type="submit" value="sibmit">
+    </form>
+
+{% endblock %}

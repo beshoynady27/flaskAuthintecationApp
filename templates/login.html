@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %} register {% endblock %}
+
+{% block body %}
+
+    <form action="/loged_in" method="post">
+       
+        <label for="email">email</label>
+        <input type="email" name="email">
+
+        <label for="doctor_password">password</label>
+        <input type="text" name="doctor_password">
+
+        <input type="submit" value="sibmit">
+    </form>
+
+{% endblock %}
