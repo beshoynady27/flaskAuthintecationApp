@@ -18,7 +18,7 @@ login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ndatabase.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nNdatabase.db'
 db = SQLAlchemy(app)
 db.create_all()
 #...
@@ -85,8 +85,8 @@ class Procedure(db.Model):
     """
     __tablename__ = 'procdure'
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, nullable=False)
-    doctor_id = db.Column(db.Integer)
+    patient_id = db.Column(db.Integer,db.ForeignKey('patient.id'), nullable=False)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     procedure_type = db.Column(db.String)
     tooth = db.Column(db.Integer)
     procedure_date = db.Column(db.DateTime)
