@@ -187,7 +187,7 @@ def patient_file():
        # procedure_type = request.form['procedure_type']
         #teeth = request.form['teeth']
        # price = request.form['price']
-
+    #patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
     patient_info = Patient.query.all()
 
     #cur.execute('INCERT INTO procedures(procedure_type, teeth, price) VALUES(?, ?, ?);',(procedure_type, teeth, price))
@@ -209,8 +209,8 @@ def added_procedure():
     
     #get patient id 
     #patient_id = Patient.id.query.filter_by(name = patient_name).first()
-    patient_id =1# db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
-    patient_id_test = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
+    #patient_id =1# db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
+    patient_id = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
     #add the data to database
     procedure = Procedure(procedure_type=procedure_type, tooth=teeth, price=price, procedure_date=procedure_date, patient_id=patient_id)
     
@@ -229,7 +229,7 @@ def added_procedure():
 
 
 
-    return render_template('patient_file_after_added_procedure.html', patient_info = patient_info, patient_id_test=patient_id_test)
+    return render_template('patient_file_after_added_procedure.html', patient_info = patient_info, patient_id=patient_id)
 
 
 @app.route('/add_new_doctor')
