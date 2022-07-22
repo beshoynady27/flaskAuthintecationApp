@@ -168,10 +168,15 @@ def added_patient():
     adress = request.form['adress']
     phone_number = request.form['phone_number']
     email = request.form['email']
-
-    patient = Patient(name=patient_name, gender=gender, birth_year=birth_year, adress=adress, email=email, phone_number=phone_number)
-    db.session.add(patient)
-    db.session.commit()
+    ######################################################################################
+    #validate patient name dose not exist in the database 
+    patients = Patient.name
+    #patient_names = patients.name
+    if patient_name not in patients:
+        patient = Patient(name=patient_name, gender=gender, birth_year=birth_year, adress=adress, email=email, phone_number=phone_number)
+        db.session.add(patient)
+        db.session.commit()
+    ######################################################################################
     '''
     ins = Patient.insert()
     conn = engine.connect()
@@ -258,3 +263,10 @@ def added_doctor():
     return redirect('/admin_panil')
 
     
+
+'''
+TODO :
+- validate the new patient name does not exist in the database
+- add button to remove patient 
+- fix the login 
+'''
