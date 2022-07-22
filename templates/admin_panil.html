@@ -8,8 +8,8 @@
     <form action="/patient_file" method="post">
         <select name="n" id="n" >
             {% for patient in patients %}
-                <option value="{{ patient['patient_name'] }}">
-                    {{ patient['patient_name'] }}
+                <option value="{{ patient.name }}">
+                    {{ patient.name }}
                 </option>
                 
             {% endfor %}
@@ -17,6 +17,6 @@
         </select>
         <button type="submit" value="submit">go to patient file</button>
     </form>
-    
+    {{patients}}
 
 {% endblock %}
