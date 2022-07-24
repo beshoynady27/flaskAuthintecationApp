@@ -170,7 +170,11 @@ def added_patient():
     email = request.form['email']
     ######################################################################################
     #validate patient name dose not exist in the database 
-    patients = Patient.name
+    patients = Patient.query.all()
+    existing_patient_names ='testtt'
+
+    #for a in patients:
+        #existing_patient_names.append(a.name)
     #patient_names = patients.name
     if patient_name not in patients:
         patient = Patient(name=patient_name, gender=gender, birth_year=birth_year, adress=adress, email=email, phone_number=phone_number)
@@ -182,7 +186,7 @@ def added_patient():
     conn = engine.connect()
     result = conn.execute(ins)
     '''
-    return redirect('/admin_panil')
+    return redirect('/admin_panil',existing_patient_names=existing_patient_names,patients=patients)
 
 
 @app.route('/patient_file', methods = ['GET', 'POST'])

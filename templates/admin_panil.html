@@ -3,7 +3,7 @@
 {% block title %} admin panel {% endblock %}
 
 {% block body %}
-
+    {{existing_patient_names}}
     <a href="/add_new_patient"><button>add new patient</button></a>
     <form action="/patient_file" method="post">
         <select name="n" id="n" >
