@@ -1,32 +1,40 @@
 
 import email
+from enum import unique
+from tokenize import triple_quoted
 from unicodedata import name
 from unittest import result
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, session
+from flask_session import Session
 from itertools import groupby
 from datetime import datetime
-import flask_login
+#import flask_login
 from flask_sqlalchemy import SQLAlchemy
+from numpy import integer
+from requests import session
 from sqlalchemy import create_engine
 
-#function to connect to database
-
-
-
+#configure app
 app = Flask(__name__)
+#configur secret key
 app.config['SECRET_KEY'] = 'secret_key'
 
+#configure sessions
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
+'''
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
+'''
+#adress to database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///LASTdatabase.db'
 
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ndatabase.db'
+# initialize SQLAlchemy
 db = SQLAlchemy(app)
-#to make SQLAlchemy connect to the database
-#engine = create_engine('sqlite:///ndatabase', echo=True)
 
-#...
+
 #make the tables in the database 
 class User(db.Model):
     """An admin user capable of viewing reports.
@@ -37,9 +45,10 @@ class User(db.Model):
     """
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    grnder = db.Column(db.String)
+    name = db.Column(db.Integer, nullable=False)
+    gender = db.Column(db.String)
     speciality = db.Column(db.String)
     authenticated = db.Column(db.Boolean, default=False)
 
@@ -69,7 +78,7 @@ class Patient(db.Model):
     """
     __tablename__ = 'patient'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False)
     gender = db.Column(db.String)
     phone_number = db.Column(db.Integer)
@@ -102,7 +111,7 @@ class Procedure(db.Model):
 db.create_all()
 
 
-
+'''
 @login_manager.user_loader
 def user_loader(user_id):
     """Given *user_id*, return the associated User object.
@@ -112,7 +121,7 @@ def user_loader(user_id):
     """
     return User.query.get(user_id)
 
-
+'''
 
 
 @app.route('/')
@@ -134,7 +143,7 @@ def loged_in() :
     user.authenticated = True
     db.session.add(user)
     db.session.commit()
-    flask_login.login_user(user, remember=True)
+    #flask_login.login_user(user, remember=True)
     
             
     '''
@@ -148,9 +157,10 @@ def loged_in() :
 @app.route('/admin_panil')
 #@flask_login.login_required
 def admin_panil():
-
+    #query data to choose the patient name to go ot patient file
     patients = Patient.query.all()
     return render_template('admin_panil.html', patients = patients)
+
 
 @app.route('/add_new_patient')
 def add_new_patient():
@@ -168,41 +178,27 @@ def added_patient():
     adress = request.form['adress']
     phone_number = request.form['phone_number']
     email = request.form['email']
+    ###################################################################################### 
+    
+    patient = Patient(name=patient_name, gender=gender, birth_year=birth_year, adress=adress, email=email, phone_number=phone_number)
+    db.session.add(patient)        
+    db.session.commit()
+    
     ######################################################################################
-    #validate patient name dose not exist in the database 
-    patients = Patient.query.all()
-    existing_patient_names ='testtt'
-
-    #for a in patients:
-        #existing_patient_names.append(a.name)
-    #patient_names = patients.name
-    if patient_name not in patients:
-        patient = Patient(name=patient_name, gender=gender, birth_year=birth_year, adress=adress, email=email, phone_number=phone_number)
-        db.session.add(patient)
-        db.session.commit()
-    ######################################################################################
-    '''
-    ins = Patient.insert()
-    conn = engine.connect()
-    result = conn.execute(ins)
-    '''
-    return redirect('/admin_panil',existing_patient_names=existing_patient_names,patients=patients)
+    
+    return redirect('/admin_panil' )
 
 
 @app.route('/patient_file', methods = ['GET', 'POST'])
 def patient_file():
     if request.method == 'POST':
         selected_patient_name = request.form["n"]
-       # procedure_type = request.form['procedure_type']
-        #teeth = request.form['teeth']
-       # price = request.form['price']
-    #patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
+        session["name"] = request.form.get("n")
+    
+    #if selected_patient_name not in session[ 'global_patient_name' ]:
+     #   session[ 'global_patient_name' ] = selected_patient_name
+
     patient_info = Patient.query.all()
-
-    #cur.execute('INCERT INTO procedures(procedure_type, teeth, price) VALUES(?, ?, ?);',(procedure_type, teeth, price))
-   # patient_info= cur.execute('SELECT * FROM patients ')
-   # patient_info= cur.execute('SELECT * FROM patients WHERE patient_name = (?);', (selected_patient_name,))
-
 
     return render_template('patient_file.html', patient_info = patient_info, selected_patient_name=selected_patient_name)
 
@@ -216,10 +212,14 @@ def added_procedure():
         patient_name = request.form['patient_name']
         procedure_date = datetime.now()
     
+    global_patient_name = session.get('global_patient_name', None)
+    
     #get patient id 
     #patient_id = Patient.id.query.filter_by(name = patient_name).first()
     #patient_id =1# db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
     patient_id = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
+
+
     #add the data to database
     procedure = Procedure(procedure_type=procedure_type, tooth=teeth, price=price, procedure_date=procedure_date, patient_id=patient_id)
     
@@ -227,18 +227,8 @@ def added_procedure():
     db.session.commit()
 
     patient_info = Patient.query.all()
-    '''
-    patient_id = cur.execute('SELECT id FROM patients WHERE patient_name = (?);', (patient_name,)).fetchone()['id']
-    cur.execute('INSERT INTO procedures(procedure_type, tooth, price, procedure_date, patient_id) VALUES(?, ?, ?, ?, ?);',
-                                                                        (procedure_type, teeth, price, prucedure_date, patient_id))
-    patient_info= cur.execute('SELECT * FROM patients WHERE patient_name = (?);', (patient_name,))
-    '''
-    
-
-
-
-
-    return render_template('patient_file_after_added_procedure.html', patient_info = patient_info, patient_id=patient_id)
+    #return redirect('/admin_panil')
+    return render_template('patient_file_after_added_procedure.html', patient_info = patient_info, patient_id=patient_id, global_patient_name=global_patient_name)
 
 
 @app.route('/add_new_doctor')
@@ -257,7 +247,7 @@ def added_doctor():
     
     doctor = User(name=name, gender=gender, speciality=speciality, email=email, password=password)
     db.session.add(doctor)
-    db.commit()
+    db.session.commit()
     '''
     cur.execute('INSERT INTO doctors (doctor_name, gender, speciality, email, doctor_password) VALUES(?, ?, ?, ?, ?)',
                     (name, gender, speciality, email, password))
@@ -270,7 +260,8 @@ def added_doctor():
 
 '''
 TODO :
-- validate the new patient name does not exist in the database
-- add button to remove patient 
-- fix the login 
+- validate the new patient name does not exist in the database - DONE
+- fix the add second procedure
+- add button to remove patient - 
+- fix the login - 
 '''

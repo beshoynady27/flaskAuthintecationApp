@@ -48,9 +48,8 @@
 
         <label for="price">price</label>
         <input type="number" name="price">
-        {% for patient in patient_info %}
-        <input type="hidden" name="patient_id" value="{{ patient['id'] }}">
-        {% endfor %}
+        <input type="hidden" name="patient_name" value="{{global_patient_name}}">{{global_patient_name}}
+
         
         <input type="submit" value="sibmit">
     </form>
