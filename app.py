@@ -1,21 +1,14 @@
-
-import email
-from enum import unique
-from tokenize import triple_quoted
-from unicodedata import name
-from unittest import result
-from flask import Flask, render_template, redirect, request, url_for, session
+#import liberaries
+from flask import Flask, render_template, redirect, request, url_for, session, flash
 from flask_session import Session
 from itertools import groupby
 from datetime import datetime
-#import flask_login
+import flask_login
 from flask_sqlalchemy import SQLAlchemy
-from numpy import integer
-from requests import session
-from sqlalchemy import create_engine
 
 #configure app
 app = Flask(__name__)
+
 #configur secret key
 app.config['SECRET_KEY'] = 'secret_key'
 
@@ -24,10 +17,10 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-'''
+
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-'''
+
 #adress to database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///LASTdatabase.db'
 
@@ -111,17 +104,17 @@ class Procedure(db.Model):
 db.create_all()
 
 
-'''
+
 @login_manager.user_loader
-def user_loader(user_id):
+def user_loader(user_email):
     """Given *user_id*, return the associated User object.
 
     :param unicode user_id: user_id (email) user to retrieve
 
     """
-    return User.query.get(user_id)
+    return User.query.get(user_email)
 
-'''
+############## User.user_id?????
 
 
 @app.route('/')
@@ -141,10 +134,10 @@ def loged_in() :
         password = request.form['doctor_password']
     user = User(email = email, password = password)
     user.authenticated = True
-    db.session.add(user)
-    db.session.commit()
-    #flask_login.login_user(user, remember=True)
-    
+    #db.session.add(user)
+    #db.session.commit()
+    flask_login.login_user(user, remember=True)
+    #flask.flash('Logged in successfully.')
             
     '''
     if email in users :
@@ -164,14 +157,14 @@ def admin_panil():
 
 @app.route('/add_new_patient')
 def add_new_patient():
-
+# send data to /added_patient
     return render_template('add_new_patient.html')
 
 
 #recieve the supmetted form add_new_patient.html and add the results to the database
 @app.route('/added_patient', methods=["GET", "POST"])
 def added_patient():
-
+#get data from /add_new_patient
     patient_name = request.form['patient_name']
     gender = request.form['gender']
     birth_year = request.form['birth_year']
@@ -191,10 +184,13 @@ def added_patient():
 
 @app.route('/patient_file', methods = ['GET', 'POST'])
 def patient_file():
+#get DATA from /admin_panil
+#and send DATA to /added_procedure
     if request.method == 'POST':
         selected_patient_name = request.form["n"]
-        session["name"] = request.form.get("n")
-    
+        session['selected_patient_name'] =  selected_patient_name
+    session["name"] = db.session.query(Patient.name).filter(Patient.name == selected_patient_name)
+    session['test'] = 'value'
     #if selected_patient_name not in session[ 'global_patient_name' ]:
      #   session[ 'global_patient_name' ] = selected_patient_name
 
@@ -205,6 +201,7 @@ def patient_file():
 
 @app.route('/added_procedure', methods = ['GET', 'POST'])
 def added_procedure():
+#get DATA from /patient_file
     if request.method == 'POST':
         procedure_type = request.form['procedure_type']
         teeth = request.form['teeth']
@@ -212,8 +209,8 @@ def added_procedure():
         patient_name = request.form['patient_name']
         procedure_date = datetime.now()
     
-    global_patient_name = session.get('global_patient_name', None)
-    
+    global_patient_name = session.get('selected_patient_name', None)
+    my_var = session.get('test',None)
     #get patient id 
     #patient_id = Patient.id.query.filter_by(name = patient_name).first()
     #patient_id =1# db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
@@ -228,7 +225,7 @@ def added_procedure():
 
     patient_info = Patient.query.all()
     #return redirect('/admin_panil')
-    return render_template('patient_file_after_added_procedure.html', patient_info = patient_info, patient_id=patient_id, global_patient_name=global_patient_name)
+    return render_template('patient_file_after_added_procedure.html', patient_info = patient_info, patient_id=patient_id, global_patient_name=global_patient_name, my_var=my_var)
 
 
 @app.route('/add_new_doctor')
@@ -264,4 +261,5 @@ TODO :
 - fix the add second procedure
 - add button to remove patient - 
 - fix the login - 
+- fix the session 
 '''
