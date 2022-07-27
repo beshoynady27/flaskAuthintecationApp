@@ -29,7 +29,7 @@ db = SQLAlchemy(app)
 
 
 #make the tables in the database 
-class User(db.Model):
+class User(db.Model, flask_login.UserMixin):
     """An admin user capable of viewing reports.
 
     :param str email: email address of user
@@ -45,6 +45,7 @@ class User(db.Model):
     speciality = db.Column(db.String)
     authenticated = db.Column(db.Boolean, default=False)
 
+    '''
     def is_active(self):
         """True, as all users are active."""
         return True
@@ -60,7 +61,7 @@ class User(db.Model):
     def is_anonymous(self):
         """False, as anonymous users aren't supported."""
         return False
-
+    '''
 
 class Patient(db.Model):
     """An admin user capable of viewing reports.
@@ -106,13 +107,9 @@ db.create_all()
 
 
 @login_manager.user_loader
-def user_loader(user_email):
-    """Given *user_id*, return the associated User object.
-
-    :param unicode user_id: user_id (email) user to retrieve
-
-    """
-    return User.query.get(user_email)
+def user_loader(user_id):
+    
+    return User.query.get(user_id)
 
 ############## User.user_id?????
 
@@ -132,23 +129,23 @@ def loged_in() :
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['doctor_password']
-    user = User(email = email, password = password)
-    user.authenticated = True
-    #db.session.add(user)
-    #db.session.commit()
+
+    user = User.query.filter_by(email = email, password = password).first()
     flask_login.login_user(user, remember=True)
     #flask.flash('Logged in successfully.')
             
-    '''
-    if email in users :
-        user = User()
-        user.id = email
-        flask_login.login_user(user)'''
-
     return redirect('/admin_panil')
 
+
+@app.route('/logout')
+@flask_login.login_required
+def logout():
+    flask_login.logout_user()
+    return redirect('/')
+
+
 @app.route('/admin_panil')
-#@flask_login.login_required
+@flask_login.login_required
 def admin_panil():
     #query data to choose the patient name to go ot patient file
     patients = Patient.query.all()

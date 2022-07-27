@@ -4,7 +4,7 @@
 
 {% block body %}
 {% if current_user.is_authenticated %}
-Hi {{ current_user.name }}!
+Hi {{ current_user.name }}! <a href="/logout">logout</a>
 {% endif %}
     {{existing_patient_names}}
     <a href="/add_new_patient"><button>add new patient</button></a>
