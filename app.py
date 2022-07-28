@@ -213,7 +213,7 @@ def patient_file():
     patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
     procedure_date = datetime.now()
     form = ProcedureForm()
-    
+    '''
     if form.validate_on_submit():
         procedure_type = form.procedure_type.data
         tooth = form.tooth.data
@@ -233,10 +233,10 @@ def patient_file():
     #session['test'] = 'value'
     #if selected_patient_name not in session[ 'global_patient_name' ]:
      #   session[ 'global_patient_name' ] = selected_patient_name
-        
+    '''
     patient_info = Patient.query.all()
-
-    return render_template('patient_file.html',form=form, patient_info = patient_info, selected_patient_name=selected_patient_name)
+    procedure_info = Procedure.query.all()
+    return render_template('patient_file.html',form=form, patient_info = patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id)
 
 
 @app.route('/added_procedure', methods = ['GET', 'POST'])
@@ -247,7 +247,8 @@ def added_procedure():
         teeth = request.form['teeth']
         price = request.form['price']
         patient_name = request.form['patient_name']
-        procedure_date = datetime.now()
+    procedure_date = datetime.now()
+
         
     
     global_patient_name = session.get('selected_patient_name', None)
@@ -255,10 +256,10 @@ def added_procedure():
     #get patient id 
     
     patient_id = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
-
+    doctor_id = flask_login.current_user.id 
 
     #add the data to database
-    procedure = Procedure(procedure_type=procedure_type, tooth=teeth, price=price, procedure_date=procedure_date, patient_id=patient_id)
+    procedure = Procedure(procedure_type=procedure_type, tooth=teeth, price=price, procedure_date=procedure_date, patient_id=patient_id, doctor_id=doctor_id)
     db.session.add(procedure)
     db.session.commit()
 
