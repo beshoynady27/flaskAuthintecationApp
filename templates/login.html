@@ -10,11 +10,11 @@
             <!--very important -->
             {{form.hidden_tag()}}
 
-            {{form.email.label}}
-            {{form.email}}
+            {{form.email.label(class="form-label")}}
+            {{form.email(class="form-control", id="exampleInputEmail1")}}
             
-            {{form.password.label}}
-            {{form.password}}
+            {{form.password.label(class="form-label")}}
+            {{form.password(class="form-control", id="exampleInputEmail1")}}
 
             {{form.submit}}
 

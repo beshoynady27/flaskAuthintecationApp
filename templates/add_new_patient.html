@@ -3,26 +3,26 @@
 {% block body %}
 
     <h1>{% block title%}add new patient {% endblock %}</h1>
-    <form  method="post">
+    <form  method="post" class="mb-3">
         {{form.hidden_tag()}}
 
-        {{form.name.label}}
-        {{form.name}}
+        {{form.name.label(class="form-label")}}
+        {{form.name(class="form-control", id="exampleInputEmail1")}}
 
-        {{form.email.label}}
-        {{form.email}}
+        {{form.email.label(class="form-label")}}
+        {{form.email(class="form-control", id="exampleInputEmail1")}}
 
-        {{form.gender.label}}
-        {{form.gender}}
+        {{form.gender.label(class="form-label")}}
+        {{form.gender(class="form-control", id="exampleInputEmail1")}}
 
-        {{form.phone_number.label}}
-        {{form.phone_number}}
+        {{form.phone_number.label(class="form-label")}}
+        {{form.phone_number(class="form-control", id="exampleInputEmail1")}}
 
-        {{form.adress.label}}
-        {{form.adress}} 
+        {{form.adress.label(class="form-label")}}
+        {{form.adress(class="form-control", id="exampleInputEmail1")}} 
 
-        {{form.birth_year.label}}
-        {{form.birth_year}}
+        {{form.birth_year.label(class="form-label")}}
+        {{form.birth_year(class="form-control", id="exampleInputEmail1")}}
 
         {{form.submit}}
        

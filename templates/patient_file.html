@@ -7,7 +7,7 @@
 
 <h1>patient personal information</h1>
 {{selected_patient_name}}
-<table>
+<table class="table table-striped">
     <tr>
       <th>id</th>
       <th>patient name</th>
@@ -19,15 +19,16 @@
 
     </tr>
     {% for patient in patient_info %}
-        <tr>
-        <td>{{ patient['id'] }}</td>
-        <td>{{ patient['name'] }}</td>
-        <td>{{ patient['gender'] }}</td>
-        <td>{{ patient['birth_year'] }}</td>
-        <td>{{ patient['adress'] }}</td>
-        <td>{{ patient['phone_number'] }}</td>
-        <td>{{ patient['email'] }}</td>
-        
+        {% if patient['name'] == selected_patient_name:%}
+            <tr>
+            <td>{{ patient['id'] }}</td>
+            <td>{{ patient['name'] }}</td>
+            <td>{{ patient['gender'] }}</td>
+            <td>{{ patient['birth_year'] }}</td>
+            <td>{{ patient['adress'] }}</td>
+            <td>{{ patient['phone_number'] }}</td>
+            <td>{{ patient['email'] }}</td>
+        {% endif %}
         </tr>
     {% endfor %}
   </table>
@@ -37,7 +38,31 @@
 
 <section>
     <h1>TODO procedures</h1>
-{{selected_patient_name}}
+    <table class="table table-striped">
+        <tr>
+          <th>id</th>
+          <th>patient id</th>
+          <th>doctor id</th>
+          <th>procedure type</th>
+          <th>tooth</th>
+          <th>procedure date</th>
+          <th>price</th>
+    
+        </tr>
+        {% for procedure in procedure_info %}
+            {% if procedure['patient_id'] == patient_id:%}
+                <tr>
+                <td>{{ procedure['id'] }}</td>
+                <td>{{ procedure['patient_id'] }}</td>
+                <td>{{ procedure['doctor_id'] }}</td>
+                <td>{{ procedure['procedure_type'] }}</td>
+                <td>{{ procedure['tooth'] }}</td>
+                <td>{{ procedure['procedure_date'] }}</td>
+                <td>{{ procedure['price'] }}</td>
+            {% endif %}
+            </tr>
+        {% endfor %}
+      </table>
 
 </section>
 
@@ -49,8 +74,8 @@
     <h1>add new procedure</h1>
 {{selected_patient_name}}
 
-    <form  method="post">
-
+    <form  action='/added_procedure' method="post">
+        <!--
         {{form.hidden_tag()}}
 
         {{form.procedure_type.label}}
@@ -64,6 +89,7 @@
 
 
         {{form.submit}}
+        -->
         <label for="procedure_type">procedure type</label>
         <input type="text" name="procedure_type">
 
@@ -74,7 +100,7 @@
         <input type="number" name="price">
 {{selected_patient_name}}
 {{selected_patient_name}}
-<input type="hidden" name="patient_name" value="{{selected_patient_name}}">{{selected_patient_name}}
+        <input type="hidden" name="patient_name" value="{{selected_patient_name}}">{{selected_patient_name}}
 
         <input type="submit" value="sibmit">
     </form>
