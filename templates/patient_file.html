@@ -42,10 +42,28 @@
 </section>
 
 <section>
+<!--if procedure
+        procedure added succesfully <btn>add new procedure</btn>(direct to the same page)
+    else
+        procedure form-->
     <h1>add new procedure</h1>
 {{selected_patient_name}}
 
-    <form action="/added_procedure" method="post">
+    <form  method="post">
+
+        {{form.hidden_tag()}}
+
+        {{form.procedure_type.label}}
+        {{form.procedure_type}}
+
+        {{form.tooth.label}}
+        {{form.tooth}}
+
+        {{form.price.label}}
+        {{form.price}}
+
+
+        {{form.submit}}
         <label for="procedure_type">procedure type</label>
         <input type="text" name="procedure_type">
 

@@ -3,16 +3,22 @@
 {% block title %} register {% endblock %}
 
 {% block body %}
+    {% if email %}
+        <h1>you are loged in as {{email}}</h1>
+    {% else %}
+        <form  method="post">
+            <!--very important -->
+            {{form.hidden_tag()}}
 
-    <form action="/loged_in" method="post">
-       
-        <label for="email">email</label>
-        <input type="email" name="email">
+            {{form.email.label}}
+            {{form.email}}
+            
+            {{form.password.label}}
+            {{form.password}}
 
-        <label for="doctor_password">password</label>
-        <input type="text" name="doctor_password">
+            {{form.submit}}
 
-        <input type="submit" value="sibmit">
-    </form>
+        </form>
+    {% endif %}
 
 {% endblock %}

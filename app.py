@@ -5,6 +5,11 @@ from itertools import groupby
 from datetime import datetime
 import flask_login
 from flask_sqlalchemy import SQLAlchemy
+#liberaries for WTForms
+from flask_wtf import FlaskForm
+from sqlalchemy import values
+from wtforms import StringField, PasswordField, SubmitField, EmailField, IntegerField, DateField, HiddenField
+from wtforms.validators import DataRequired, email, length, Length
 
 #configure app
 app = Flask(__name__)
@@ -82,8 +87,6 @@ class Patient(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.name
 
-
-
 class Procedure(db.Model):
     """An admin user capable of viewing reports.
 
@@ -104,14 +107,42 @@ class Procedure(db.Model):
         return '<Name %r>' % self.name
 db.create_all()
 
+#make the Form class
+class UserForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    email = EmailField('email', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
+    gender = StringField('gender')
+    speciality = StringField('gender')
+    submit = SubmitField('submit')
+    submit = SubmitField('submit')
 
+class PatientForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    email = EmailField('email', validators=[DataRequired()])
+    gender = StringField('gender')
+    phone_number = IntegerField('phone_number')
+    adress = StringField('adress')
+    birth_year = IntegerField('birth_year')
+    submit = SubmitField('submit')
+
+class ProcedureForm(FlaskForm):
+    procedure_type = StringField('procedure_type')
+    tooth = IntegerField('tooth')
+    price = IntegerField('price')
+    #patient_name = HiddenField('patient_name')
+    submit = SubmitField('submit')
+
+class LoginForm(FlaskForm):
+    email = EmailField('email', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
+    submit = SubmitField('submit')
 
 @login_manager.user_loader
 def user_loader(user_id):
     
     return User.query.get(user_id)
 
-############## User.user_id?????
 
 
 @app.route('/')
@@ -121,20 +152,19 @@ def index():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
+    form = LoginForm()
+    email = None
+    password = None
+    if form.validate_on_submit():
 
-    return render_template('login.html')
+        email = form.email.data
+        password = form.password.data
+        user = User.query.filter_by(email = email, password = password).first()
+        flask_login.login_user(user, remember=True)
 
-@app.route('/loged_in', methods=["GET", "POST"])
-def loged_in() :
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['doctor_password']
+        return redirect(url_for('admin_panil'))
 
-    user = User.query.filter_by(email = email, password = password).first()
-    flask_login.login_user(user, remember=True)
-    #flask.flash('Logged in successfully.')
-            
-    return redirect('/admin_panil')
+    return render_template('login.html', form=form, email=email)
 
 
 @app.route('/logout')
@@ -152,48 +182,61 @@ def admin_panil():
     return render_template('admin_panil.html', patients = patients)
 
 
-@app.route('/add_new_patient')
+@app.route('/add_new_patient', methods=['GET', 'POST'])
 def add_new_patient():
-# send data to /added_patient
-    return render_template('add_new_patient.html')
+    form = PatientForm()
+
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        adress = form.adress.data
+        phone_number = form.phone_number.data
+        gender = form.gender.data
+        birth_year = form.birth_year.data
+
+        patient = Patient(name=name, gender=gender, birth_year=birth_year, adress=adress, email=email, phone_number=phone_number)
+        db.session.add(patient)        
+        db.session.commit()
+
+        return redirect(url_for('admin_panil'))
 
 
-#recieve the supmetted form add_new_patient.html and add the results to the database
-@app.route('/added_patient', methods=["GET", "POST"])
-def added_patient():
-#get data from /add_new_patient
-    patient_name = request.form['patient_name']
-    gender = request.form['gender']
-    birth_year = request.form['birth_year']
-    adress = request.form['adress']
-    phone_number = request.form['phone_number']
-    email = request.form['email']
-    ###################################################################################### 
-    
-    patient = Patient(name=patient_name, gender=gender, birth_year=birth_year, adress=adress, email=email, phone_number=phone_number)
-    db.session.add(patient)        
-    db.session.commit()
-    
-    ######################################################################################
-    
-    return redirect('/admin_panil' )
+    return render_template('add_new_patient.html', form=form)
+
 
 
 @app.route('/patient_file', methods = ['GET', 'POST'])
 def patient_file():
 #get DATA from /admin_panil
-#and send DATA to /added_procedure
     if request.method == 'POST':
         selected_patient_name = request.form["n"]
-        session['selected_patient_name'] =  selected_patient_name
-    session["name"] = db.session.query(Patient.name).filter(Patient.name == selected_patient_name)
-    session['test'] = 'value'
+    patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
+    procedure_date = datetime.now()
+    form = ProcedureForm()
+    
+    if form.validate_on_submit():
+        procedure_type = form.procedure_type.data
+        tooth = form.tooth.data
+        price = form.price.data
+
+        #procedure_date = datetime.now()
+        #patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
+        
+        procedure = Procedure(procedure_type=procedure_type, tooth=tooth, price=price, procedure_date=procedure_date, patient_id=patient_id)
+        db.session.add(procedure)
+        db.session.commit()
+        
+        return redirect(url_for('admin_panil'))
+        #selected_patient_name = request.form["n"]
+        #session['selected_patient_name'] =  selected_patient_name
+    #session["name"] = db.session.query(Patient.name).filter(Patient.name == selected_patient_name)
+    #session['test'] = 'value'
     #if selected_patient_name not in session[ 'global_patient_name' ]:
      #   session[ 'global_patient_name' ] = selected_patient_name
-
+        
     patient_info = Patient.query.all()
 
-    return render_template('patient_file.html', patient_info = patient_info, selected_patient_name=selected_patient_name)
+    return render_template('patient_file.html',form=form, patient_info = patient_info, selected_patient_name=selected_patient_name)
 
 
 @app.route('/added_procedure', methods = ['GET', 'POST'])
@@ -205,50 +248,43 @@ def added_procedure():
         price = request.form['price']
         patient_name = request.form['patient_name']
         procedure_date = datetime.now()
+        
     
     global_patient_name = session.get('selected_patient_name', None)
     my_var = session.get('test',None)
     #get patient id 
-    #patient_id = Patient.id.query.filter_by(name = patient_name).first()
-    #patient_id =1# db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
+    
     patient_id = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
 
 
     #add the data to database
     procedure = Procedure(procedure_type=procedure_type, tooth=teeth, price=price, procedure_date=procedure_date, patient_id=patient_id)
-    
     db.session.add(procedure)
     db.session.commit()
 
     patient_info = Patient.query.all()
-    #return redirect('/admin_panil')
+    
     return render_template('patient_file_after_added_procedure.html', patient_info = patient_info, patient_id=patient_id, global_patient_name=global_patient_name, my_var=my_var)
 
 
-@app.route('/add_new_doctor')
+@app.route('/add_new_doctor', methods=['GET', 'POST'])
 def add_new_doctor():
+    form = UserForm()
 
-    return render_template('add_new_doctor.html')
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        password = form.password.data
+        gender = form.gender.data
+        speciality = form.speciality.data
 
-@app.route('/added_doctor', methods= ['GET', 'POST'])
-def added_doctor():
-    if request.method == 'POST':
-        name = request.form['name']
-        gender = request.form['gender']
-        speciality = request.form['speciality']
-        email = request.form['email']
-        password = request.form['doctor_password']
-    
-    doctor = User(name=name, gender=gender, speciality=speciality, email=email, password=password)
-    db.session.add(doctor)
-    db.session.commit()
-    '''
-    cur.execute('INSERT INTO doctors (doctor_name, gender, speciality, email, doctor_password) VALUES(?, ?, ?, ?, ?)',
-                    (name, gender, speciality, email, password))
-    '''
+        doctor = User(name=name, gender=gender, speciality=speciality, email=email, password=password)
+        db.session.add(doctor)
+        db.session.commit()
+        flask_login.login_user(doctor)
+        return redirect(url_for('admin_panil'))
 
-
-    return redirect('/admin_panil')
+    return render_template('add_new_doctor.html', form=form)
 
     
 
