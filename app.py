@@ -26,6 +26,8 @@ Session(app)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
+#login_manager.login_view = "users.login"
+
 #adress to database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///LASTdatabase.db'
 
@@ -179,7 +181,11 @@ def logout():
 def admin_panil():
     #query data to choose the patient name to go ot patient file
     patients = Patient.query.all()
-    return render_template('admin_panil.html', patients = patients)
+    prices = db.session.query(Procedure.price).all()
+    total_revnue = 0
+    for price in prices:
+        total_revnue = total_revnue + price
+    return render_template('admin_panil.html', patients = patients, total_revnue=total_revnue)
 
 
 @app.route('/add_new_patient', methods=['GET', 'POST'])
