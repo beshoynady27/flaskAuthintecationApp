@@ -182,10 +182,11 @@ def admin_panil():
     #query data to choose the patient name to go ot patient file
     patients = Patient.query.all()
     prices = db.session.query(Procedure.price).all()
+    procedures = Procedure.query.all()
     total_revnue = 0
-    for price in prices:
-        total_revnue = total_revnue + price
-    return render_template('admin_panil.html', patients = patients, total_revnue=total_revnue)
+    for procedure in procedures:
+        total_revnue = int(total_revnue) + int(procedure.price)
+    return render_template('admin_panil.html', patients = patients, total_revnue=total_revnue, prices=prices, procedures=procedures)
 
 
 @app.route('/add_new_patient', methods=['GET', 'POST'])
