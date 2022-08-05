@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>procedure added succsesfully </h1>
+    <a href="/admin_panil"><button>Admin panil</button></a>
+
+    <br>
+
+    <form action="/patient_file" method="post">
+        <input type="hidden" name="n" value="{{patient_name}}">
+        <input type="submit" value="patient file">
+    </form>
+       
+
+{% endblock %}

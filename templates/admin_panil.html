@@ -8,7 +8,7 @@ Hi {{ current_user.name }}! <a href="/logout">logout</a>
 {% endif %}
     {{existing_patient_names}}
     <a href="/add_new_patient"><button>add new patient</button></a>
-    <form action="/patient_file" method="post">
+    <!--<form action="/patient_file" method="post">
         <select name="n" id="n" >
             {% for patient in patients %}
                 <option value="{{ patient.name }}">
@@ -19,13 +19,79 @@ Hi {{ current_user.name }}! <a href="/logout">logout</a>
             
         </select>
         <button type="submit" value="submit">go to patient file</button>
+    </form> -->
+
+
+    <form action="/patient_file" method="post">
+        <ul>
+            {% for patient in patients %}
+                <li><input type="radio" name="n" value="{{ patient.name }}">{{ patient.name }}</li>
+                
+            {% endfor %}
+        </ul>
+        <button type="submit" value="submit">go to patient file</button>
     </form>
+
+
+
     {{patients}}
     <section>
         <h1>financial </h1>
-        total revenue =  
-        {{total_revnue}}
+
+        <h3>this year income</h3>
+        total income =  
+        {{total_income}} 
+        <br>
+        income from endo = {{income_from_endo}}
+        <br>
+        operative = {{income_from_operative}}
+        <br>
+        crown = {{income_from_crown}}
+        <br>
+        bridge = {{income_from_bridge}}
+        <br>
+        scaling = {{income_from_scaling}}
+        <br>
+        srgery = {{income_from_surgery}}
+        <br>
+        implant = {{income_from_implant}}
+        <br>
+        other = {{income_from_other}}
         
+        <br>
+        <br>
+        <h3>this month income</h3>
+        total income = {{last_month_income}}
+        endo = {{income_from_endo_last_month}}
+        operative = {{income_from_operative_last_month}}
+        <br>
+        crown = {{income_from_crown_this_month}}
+        <br>
+        bridge = {{income_from_bridge_this_month}}
+        <br>
+        scaling = {{income_from_scaling_this_month}}
+        <br>
+        surgery = {{income_from_other_this_month}}
+        <br>
+        implant = {{income_from_implant_this_month}}
+        <br>
+        other = {{income_from_other_this_month}}
     </section>
 
+
+
+    <section>
+        <h1>patients waiting in the lobby</h1>
+        <table class="table table-striped">
+            <tr>
+              <th>patient name</th>
+            </tr>
+            {% for patient in waiting_list %}
+                
+                <tr>
+                    <td>{{ patient['name'] }}</td>  
+                </tr>
+            {% endfor %}
+          </table>
+    </section>
 {% endblock %}

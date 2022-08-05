@@ -16,6 +16,8 @@
       <th>adress</th>
       <th>phonr number</th>
       <th>email</th>
+      <th>medical_history</th>
+
 
     </tr>
     {% for patient in patient_info %}
@@ -28,6 +30,8 @@
             <td>{{ patient['adress'] }}</td>
             <td>{{ patient['phone_number'] }}</td>
             <td>{{ patient['email'] }}</td>
+            <td>{{ patient['medical_history'] }}</td>
+
         {% endif %}
         </tr>
     {% endfor %}
@@ -47,6 +51,7 @@
           <th>tooth</th>
           <th>procedure date</th>
           <th>price</th>
+          <th>description</th>
     
         </tr>
         {% for procedure in procedure_info %}
@@ -59,6 +64,8 @@
                 <td>{{ procedure['tooth'] }}</td>
                 <td>{{ procedure['procedure_date'] }}</td>
                 <td>{{ procedure['price'] }}</td>
+                <td>{{ procedure['description'] }}</td>
+
             {% endif %}
             </tr>
         {% endfor %}
@@ -91,16 +98,31 @@
         {{form.submit}}
         -->
         <label for="procedure_type">procedure type</label>
-        <input type="text" name="procedure_type">
+        
+        <select name="procedure_type">
+            <option value="endo">Root canal treatment</option>
+            <option value="operative">Composit filling</option>
+            <option value="scalling">Scalling</option>
+            <option value="crown"> Crown</option>
+            <option value="bridge">Bridge</option>
+            <option value="implant">Implant</option>
+            <option value="surgery">Surgery</option>
+
+            <option value="other">Other</option>
+            
+        </select>
 
         <label for="teeth">teeth</label>
         <input type="text" name="teeth">
 
         <label for="price">price</label>
-        <input type="number" name="price">
-{{selected_patient_name}}
-{{selected_patient_name}}
-        <input type="hidden" name="patient_name" value="{{selected_patient_name}}">{{selected_patient_name}}
+        <input type="number" name="price" value="0" required>
+
+        <label for="description">description</label>
+        <textarea name="description" id="" cols="10" rows="2" placeholder="description"> </textarea>
+        
+
+        <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
 
         <input type="submit" value="sibmit">
     </form>

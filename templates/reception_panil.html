@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+
+    <section>
+        <a href="/add_new_patient"><button>add new patient</button></a>
+    </section>
+
+    <section>
+        <h1>patients waiting in the loopy</h1>
+        <form method="post">
+            <select name="waiting_patient"  >
+                {% for patient in patients %}
+                    <option value="{{ patient.name }}">
+                        {{ patient.name }}
+                    </option>
+                    
+                {% endfor %}
+                
+            </select>
+            <button type="submit" value="submit">add patient waiting</button>
+        </form>
+    </section>
+
+
+{% endblock %}
