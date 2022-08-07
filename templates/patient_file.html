@@ -40,6 +40,11 @@
 
 </section>
 
+<form name= 'name_form'action="/diagnosis" method="get">
+    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+    <input type="submit" value="add diagnosis">
+</form>
+
 <section>
     <h1>TODO procedures</h1>
     <table class="table table-striped">

@@ -1,5 +1,6 @@
 
 import email
+from hashlib import new
 from flask import Flask, render_template, redirect, request, url_for
 from itertools import groupby
 from datetime import datetime
@@ -22,6 +23,36 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nNdatabase.db'
 db = SQLAlchemy(app)
 db.create_all()
 #...
+
+
+
+class Tooth:
+    number = ''
+    def __init__(self, num) -> None:
+        self.num = num
+        self.miss
+    
+    def missed(self):
+        
+        return 'M'
+        pass
+
+    def decaied(self):
+        pass
+
+    def filled(self):
+        
+        return 'F'
+        pass
+
+    def root_canal_treated(self):
+        pass
+
+
+UL1 = Tooth
+if inp == F:
+    UL1.filled()
+
 
 class User(db.Model):
     """An admin user capable of viewing reports.

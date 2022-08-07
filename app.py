@@ -1,5 +1,4 @@
 #import liberaries
-from email.policy import default
 from flask import Flask, render_template, redirect, request, url_for, session, flash
 from flask_session import Session
 from itertools import groupby
@@ -10,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from pyparsing import And
 from sqlalchemy import values
-from wtforms import StringField, PasswordField, SubmitField, EmailField, IntegerField, DateField, HiddenField, SelectField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, EmailField, IntegerField, DateField, HiddenField, SelectField, TextAreaField, BooleanField
 from wtforms.validators import DataRequired, email, length, Length
 
 #configure app
@@ -39,12 +38,7 @@ db = SQLAlchemy(app)
 
 #make the tables in the database 
 class User(db.Model, flask_login.UserMixin):
-    """An admin user capable of viewing reports.
-
-    :param str email: email address of user
-    :param str password: encrypted password for the user
-
-    """
+    
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, nullable=False, unique=True)
@@ -53,24 +47,6 @@ class User(db.Model, flask_login.UserMixin):
     gender = db.Column(db.String)
     speciality = db.Column(db.String)
     authenticated = db.Column(db.Boolean, default=False)
-
-    '''
-    def is_active(self):
-        """True, as all users are active."""
-        return True
-
-    def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.email
-
-    def is_authenticated(self):
-        """Return True if the user is authenticated."""
-        return self.authenticated
-
-    def is_anonymous(self):
-        """False, as anonymous users aren't supported."""
-        return False
-    '''
 
 class Patient(db.Model):
     
@@ -110,6 +86,33 @@ class WaitingPatients(db.Model):
     name = db.Column(db.String)
     date = db.Column(db.Date)
 
+class Tooth(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
+    tooth = db.Column(db.String)
+    missed = db.Column(db.Boolian, server_default=False)
+    filled = db.Column(db.Boolian, server_default=False)
+    decaied = db.Column(db.Boolian, server_default=False)
+    rct = db.Column(db.Boolian, server_default=False)
+
+    '''
+    def __init__(self, num) -> None:
+        self.num = num
+        self.miss
+    '''
+    def is_missed(self):
+        self.missed = True
+        
+
+    def is_decaied(self):
+        self.decaied = True
+
+    def is_filled(self):
+        self.filled = True
+        
+
+    def is_root_canal_treated(self):
+        self.rct = True
     
 
 db.create_all()
@@ -145,6 +148,9 @@ class LoginForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired()])
     submit = SubmitField('submit')
 
+class DiagnosisForm(FlaskForm):
+    tooth = HiddenField('tooth')
+    
 #class LobbyForm(FlaskForm):
 #    patients_waiting = s
 
@@ -377,6 +383,29 @@ def patient_file():
     patient_info = Patient.query.all()
     procedure_info = Procedure.query.all()
     return render_template('patient_file.html',form=form, patient_info = patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id)
+
+
+@app.route('/diagnosis', methods=['GET', 'POST'])
+def diagnosis():
+    if request.method == 'GET':
+        patient_name = request.args.get('patient_name')
+        #patient_name = request.form["patient_name"]
+    
+    
+    if request.method == 'POST':
+        #diagnosis =  request.form["diagnosis"] 
+        missed =  request.form["missed"] 
+        filled =  request.form["filled"]
+        decaied = request.form["decaied"]
+        rct = request.form["rct"] 
+        tooth = request.form["tooth"]
+        patient_name = request.form["patient_name"]
+    
+    patient_id = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
+    
+    diagnosis = Tooth(missed=missed, filled=filled, decaied=decaied, rct=rct, tooth=tooth, patient_id=patient_id)
+    
+    return render_template('diagnosis.html', patient_name=patient_name)
 
 
 @app.route('/added_procedure', methods = ['GET', 'POST'])
