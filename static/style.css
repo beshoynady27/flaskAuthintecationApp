@@ -1,0 +1,118 @@
+/* landidng page style */ 
+body{
+    background-color:  rgb(245,245,245);
+    overflow-x: hidden;  /*to remve horizontal scroll*/
+}
+
+.index_nav{
+    background-color: rgb(245,245,245) ;
+    width: 100%;
+    height: 10vh;
+
+}
+
+.index_sec{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+
+.index_sec1_div1{
+    width: 50vw;
+    background-color: rgb(245,245,245);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 3%;
+    
+}
+
+
+.index_sec1_div1_h1{
+    color:rgb(103,164,214);
+}
+
+.index_sec1_div1_h4{
+    text-align:center;
+}
+
+
+
+
+
+.index_sec1_div2{
+    width: 50vw;
+    background-color: rgb(245,245,245);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.index_sec1_div2_img{
+    height: auto;
+    width: 100%;
+}
+
+
+/* index section 2 */
+#index_sec2{
+    display: flex;
+    flex-direction: column;
+}
+
+.index_sec2_1{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 60;
+    padding-bottom: 5%;
+}
+
+.index_sec2_2{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+
+}
+.index_feature_box{
+    border-style: solid;
+    border-color: rgb(103,164,214);
+    border-width: thick;
+}
+
+.index_feature_box_img{
+    width: 250;
+    height: auto;
+}
+
+.index_feature_box_text{
+    text-align: center;
+    font-size: 25;
+    padding-bottom: 5%;
+    
+
+}
+
+
+/*------------------admin panil----------*/
+
+.admin_panil_sec1{
+    height: 50%;
+}
+
+
+#secc{
+    height: 100vh;
+}
+
+.test_sec{
+    border: 3ch;
+    border-color: black;
+}

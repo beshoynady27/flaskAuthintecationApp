@@ -1,41 +1,44 @@
-{% extends 'layout.html'%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <title></title>
+    <link rel="stylesheet" href="/static/style.css">
 
-{% block title %} admin panel {% endblock %}
+    <style>
+    
+        
 
-{% block body %}
-{% if current_user.is_authenticated %}
-Hi {{ current_user.name }}! <a href="/logout">logout</a>
-{% endif %}
-    {{existing_patient_names}}
-    <a href="/add_new_patient"><button>add new patient</button></a>
-    <!--<form action="/patient_file" method="post">
-        <select name="n" id="n" >
-            {% for patient in patients %}
-                <option value="{{ patient.name }}">
-                    {{ patient.name }}
-                </option>
-                
-            {% endfor %}
-            
-        </select>
-        <button type="submit" value="submit">go to patient file</button>
-    </form> -->
+    </style>
+</head>
+<body>
+    <nav class="index_nav">
+        <a href="/add_new_patient"><button class="btn btn-outline-primary">add new patient</button></a>
+    </nav>
+    <section class="test_sec" id="test">aaaaaaaaaaaaaaaaa</section>
+    <section class="admin_panil_sec1">
 
+        <form action="/patient_file" method="post">
+            <ul>
+                {% for patient in patients %}
+                    <li><input type="radio" name="n" value="{{ patient.name }}">{{ patient.name }}</li>
+                    
+                {% endfor %}
+            </ul>
+            <button class="btn btn-outline-primary" type="submit" value="submit">go to patient file</button>
+        </form>
 
-    <form action="/patient_file" method="post">
-        <ul>
-            {% for patient in patients %}
-                <li><input type="radio" name="n" value="{{ patient.name }}">{{ patient.name }}</li>
-                
-            {% endfor %}
-        </ul>
-        <button type="submit" value="submit">go to patient file</button>
-    </form>
+    </section>
+    {% if current_user.is_authenticated %}
+    Hi {{ current_user.name }}! <a href="/logout">logout</a>
+    {% endif %}
+        
+    
 
-
-
-    {{patients}}
-    <section>
+    <section >
         <h1>financial </h1>
 
         <h3>this year income</h3>
@@ -94,4 +97,7 @@ Hi {{ current_user.name }}! <a href="/logout">logout</a>
             {% endfor %}
           </table>
     </section>
-{% endblock %}
+</body>
+</html>
+
+

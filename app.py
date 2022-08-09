@@ -86,14 +86,11 @@ class WaitingPatients(db.Model):
     name = db.Column(db.String)
     date = db.Column(db.Date)
 
-class Tooth(db.Model):
+class Diagnosis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
-    tooth = db.Column(db.String)
-    missed = db.Column(db.Boolian, server_default=False)
-    filled = db.Column(db.Boolian, server_default=False)
-    decaied = db.Column(db.Boolian, server_default=False)
-    rct = db.Column(db.Boolian, server_default=False)
+    subject = db.Column(db.String)
+    diagnosis =  db.Column(db.String)
 
     '''
     def __init__(self, num) -> None:
@@ -394,16 +391,13 @@ def diagnosis():
     
     if request.method == 'POST':
         #diagnosis =  request.form["diagnosis"] 
-        missed =  request.form["missed"] 
-        filled =  request.form["filled"]
-        decaied = request.form["decaied"]
-        rct = request.form["rct"] 
-        tooth = request.form["tooth"]
+        diagnosis = request.form['diagnosis']
+        subject = request.form["subject"]
         patient_name = request.form["patient_name"]
     
-    patient_id = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
+        patient_id = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
     
-    diagnosis = Tooth(missed=missed, filled=filled, decaied=decaied, rct=rct, tooth=tooth, patient_id=patient_id)
+        diagnosis = Diagnosis(diagnosis=diagnosis, subject=subject, patient_id=patient_id)
     
     return render_template('diagnosis.html', patient_name=patient_name)
 
@@ -416,6 +410,7 @@ def added_procedure():
         teeth = request.form['teeth']
         price = request.form['price']
         patient_name = request.form['patient_name']
+        description = request.form['description']
     procedure_date = datetime.now()
 
         
