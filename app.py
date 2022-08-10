@@ -44,15 +44,16 @@ class User(db.Model, flask_login.UserMixin):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     name = db.Column(db.Integer, nullable=False)
-    gender = db.Column(db.String)
-    speciality = db.Column(db.String)
+    clinic_name = db.Column(db.String)
+    clinic_num = db.Column(db.Integer)
+
     authenticated = db.Column(db.Boolean, default=False)
 
 class Patient(db.Model):
     
     __tablename__ = 'patient'
     id = db.Column(db.Integer, primary_key=True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False)
     gender = db.Column(db.String)
@@ -60,16 +61,33 @@ class Patient(db.Model):
     adress = db.Column(db.String)
     birth_year = db.Column(db.Integer)
     medical_history = db.Column(db.String)
+    ensurance_company = db.Column(db.String)
 
     def __repr__(self):
         return '<Name %r>' % self.name
+
+class Operator(db.Model):
+
+    __tablename__ = 'operator'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
+    email = db.Column(db.String, nullable=False)
+    gender = db.Column(db.String)
+    phone_number = db.Column(db.Integer)
+    speciality = db.Column(db.String)
+    
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
 
 class Procedure(db.Model):
 
     __tablename__ = 'procdure'
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    operator_id = db.Column(db.Integer, db.ForeignKey('operator.id'), nullable=False)
+    clinic_id = db.Column(db.Integer, db.ForeignKey('clinic.id'))
     procedure_type = db.Column(db.String)
     tooth = db.Column(db.Integer)
     procedure_date = db.Column(db.Date)
@@ -79,12 +97,25 @@ class Procedure(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.name
 
-class WaitingPatients(db.Model):
-    __tablename__ = 'waiting_patients'
+class Clinic(db.Model):
+
+    __tablename__ = 'procdure'
     id = db.Column(db.Integer, primary_key=True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    name = db.Column(db.String)
-    date = db.Column(db.Date)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+class Appointments(db.Model):
+
+    __tablename__ = 'appointments'
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
+    date = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return '<Name %r>' % self.name
 
 class Diagnosis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -289,7 +320,7 @@ def admin_panil():
 
     ########### LOBBY ######
     
-    waiting_list = WaitingPatients.query.filter(WaitingPatients.doctor_id == flask_login.current_user.id)
+    #waiting_list = WaitingPatients.query.filter(WaitingPatients.doctor_id == flask_login.current_user.id)
 
 
     return render_template('admin_panil.html', patients = patients, total_income=total_income, prices=prices, procedures=procedures,
@@ -299,7 +330,7 @@ def admin_panil():
         income_from_endo_last_month=income_from_endo_this_month, income_from_operative_last_month=income_from_operative_this_month, 
         income_from_scaling_this_month=income_from_scaling_this_month, income_from_crown_this_month=income_from_crown_this_month, 
         income_from_bridge_this_month=income_from_bridge_this_month, income_from_implant_this_month=income_from_implant_this_month, 
-        income_from_surgery_this_month=income_from_surgery_this_month, income_from_other_this_month=income_from_other_this_month, waiting_list=waiting_list)
+        income_from_surgery_this_month=income_from_surgery_this_month, income_from_other_this_month=income_from_other_this_month)
 
 
 
@@ -311,9 +342,9 @@ def reciption_panil():
         day = date.today()
         doctor_id = flask_login.current_user.id
 
-        patient = WaitingPatients(name=waiting_patient, date=day, doctor_id=doctor_id)
-        db.session.add(patient)        
-        db.session.commit()
+        #patient = WaitingPatients(name=waiting_patient, date=day, doctor_id=doctor_id)
+        #db.session.add(patient)        
+        #db.session.commit()
         
     patients = Patient.query.all().filter(Procedure.doctor_id == flask_login.current_user.id)
 
