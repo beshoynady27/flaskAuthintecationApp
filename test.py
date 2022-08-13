@@ -117,7 +117,7 @@ class Procedure(db.Model):
     __tablename__ = 'procdure'
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer,db.ForeignKey('patient.id'), nullable=False)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     procedure_type = db.Column(db.String)
     tooth = db.Column(db.Integer)
     procedure_date = db.Column(db.DateTime)

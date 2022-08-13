@@ -64,7 +64,7 @@
                 <tr>
                 <td>{{ procedure['id'] }}</td>
                 <td>{{ procedure['patient_id'] }}</td>
-                <td>{{ procedure['doctor_id'] }}</td>
+                <td>{{ procedure['user_id'] }}</td>
                 <td>{{ procedure['procedure_type'] }}</td>
                 <td>{{ procedure['tooth'] }}</td>
                 <td>{{ procedure['procedure_date'] }}</td>
@@ -85,23 +85,16 @@
         procedure form-->
     <h1>add new procedure</h1>
 {{selected_patient_name}}
-
-    <form  action='/added_procedure' method="post">
-        <!--
-        {{form.hidden_tag()}}
-
-        {{form.procedure_type.label}}
-        {{form.procedure_type}}
-
-        {{form.tooth.label}}
-        {{form.tooth}}
-
-        {{form.price.label}}
-        {{form.price}}
-
-
-        {{form.submit}}
-        -->
+operator id is:{{operator_id}}
+    <form  method="get">
+        
+        <label for="operator_name">operator name</label>
+        <select name="operator_name" id="">
+            {% for operator in operators%}
+                <option value="{{ operator['name'] }}">{{operator['name']}}</option>
+            {% endfor %}
+        </select>
+        {{operators.name}}
         <label for="procedure_type">procedure type</label>
         
         <select name="procedure_type">
@@ -133,5 +126,9 @@
     </form>
 {{selected_patient_name}}
     
+</section>
+
+<section>
+    <form action="" method="post"></form>
 </section>
 {% endblock %}

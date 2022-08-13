@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>setup account</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+    <form method="post">
+        <label for="name">operator name</label>
+        <input type="text" name="name">
+
+        <label for="email">operator email</label>
+        <input type="email" name="email">
+
+        <label for="gender">operator gender</label>
+        <input type="text" name="gender">
+
+        <label for="phone_number">operator phone</label>
+        <input type="number" name="phone_number">
+
+        <label for="speciality">operator speciality</label>
+        <input type="text" name="speciality">
+
+        <input type="submit" value="submit">
+    </form>
+
+    <form  method="get">
+        {% set count = [0] %}
+        name yoyr rooms:
+            <br>
+        {%for x in range( clinic_number ) :%}
+
+            {% if count.append(count.pop() + 1) %}{% endif %} {# increment count by 1 #}
+            
+            <label for="name">room {{count[0]}} name</label>
+            <input type="text" name="name" value="Room {{count[0]}}">
+            
+                
+            
+        {% endfor %}
+        <input type="submit" value="submit">
+    </form>
+    {% for message in get_flashed_messages() %}
+        hi {{message}}
+    {% endfor %}
+    {{clinic_number}}
+</body>
+</html>
