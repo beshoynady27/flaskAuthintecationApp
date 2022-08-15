@@ -31,13 +31,25 @@
 <a href="/add_new_patient">add new patient</a>
     <section class="admin_panil_sec1">
 
-        <form action="/patient_file" method="post">
+        <!--form action="/patient_file" method="post">
             <ul>
                 {% for patient in patients %}
                     <li><input type="radio" name="n" value="{{ patient.name }}">{{ patient.name }}</li>
                     
                 {% endfor %}
             </ul>
+            <button class="btn btn-outline-primary" type="submit" value="submit">go to patient file</button>
+        </form-->
+
+    </section>
+
+    <section class="admin_panil_sec1">
+        {{patient_list}}
+        <form action="/patient_file" method="post">
+            
+            {{form.hidden_tag()}}
+            {{form.name}}
+                
             <button class="btn btn-outline-primary" type="submit" value="submit">go to patient file</button>
         </form>
 

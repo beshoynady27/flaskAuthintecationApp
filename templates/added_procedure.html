@@ -7,7 +7,8 @@
     <br>
 
     <form action="/patient_file" method="post">
-        <input type="hidden" name="n" value="{{patient_name}}">
+        {{hidden_form.hidden_tag()}}
+        {{hidden_form.selected_patient_name}}
         <input type="submit" value="patient file">
     </form>
        
