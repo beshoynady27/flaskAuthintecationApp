@@ -405,7 +405,7 @@ def patient_file():
         
         operators = Operator.query.filter(Operator.user_id == flask_login.current_user.id)
         
-        operator_list = []
+        operator_list = []                                                                                                       
         
         for operator in operators:
             operator_list.append(operator.name)
@@ -438,9 +438,16 @@ def patient_file():
 
             flash('procedure added')
             return redirect(url_for('patient_file'), selected_patient_name=selected_patient_name)
-        
+    
+        patient_info = Patient.query.all()
+        procedure_info = Procedure.query.all()
+    return render_template('patient_file.html', patient_info = patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form)
+
+    '''
         hidden_form = HiddenNameForm
+        
         if hidden_form.validate_on_submit():
+
             selected_patient_name = name_form.name.data
             patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
         
@@ -481,6 +488,7 @@ def patient_file():
 
                 flash('procedure added')
                 return redirect(url_for('patient_file'), selected_patient_name=selected_patient_name)
+        '''
     '''
         if request.method == 'GET':
             operator_name = request.args.get('operator_name')
@@ -515,7 +523,7 @@ def patient_file():
 #                return render_template('patient_file.html', patient_info = patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name,
 #                    patient_id=patient_id, operators=operators, procedure_form=procedure_form)
     
-        #return render_template(url_for('patient_file'))
+    #return render_template(url_for('patient_file'))
 
 
 @app.route('/diagnosis', methods=['GET', 'POST'])
