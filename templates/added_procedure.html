@@ -11,6 +11,38 @@
         {{hidden_form.selected_patient_name}}
         <input type="submit" value="patient file">
     </form>
-       
+
+    <form  action="/added_procedure" method="post">
+        {{procedure_form.hidden_tag()}}
+
+        {{procedure_form.operator_name.label}}
+        {{procedure_form.operator_name}}
+
+        {{procedure_form.procedure_type.label}}
+        {{procedure_form.procedure_type}}
+
+        {{procedure_form.tooth.label}}
+        {{procedure_form.tooth}}
+
+        {{procedure_form.price.label}}
+        {{procedure_form.price}}
+
+        {{procedure_form.description.label}}
+        {{procedure_form.description}}
+
+        {{procedure_form.selected_patient_name}}
+
+        <!--{{procedure_form.patient_name}}-->
+
+        {{procedure_form.submit}}
+
+    </form>
+   selected patient:    
+{{selected_patient_name}}
+
+<br>
+patient id: {{patient_id}}
+<br>
+operator: {{operator_name}}
 
 {% endblock %}

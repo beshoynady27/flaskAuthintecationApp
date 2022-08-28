@@ -6,7 +6,7 @@
 <section>
 
 <h1>patient personal information</h1>
-{{selected_patient_name}}
+
 <table class="table table-striped">
     <tr>
       <th>id</th>
@@ -24,7 +24,7 @@
         {% if patient['name'] == selected_patient_name:%}
             <tr>
             <td>{{ patient['id'] }}</td>
-            <td>{{ patient['name'] }}</td>
+            <td>{{ patient['name'].strip('0123456789') }}</td>
             <td>{{ patient['gender'] }}</td>
             <td>{{ patient['birth_year'] }}</td>
             <td>{{ patient['adress'] }}</td>
@@ -36,7 +36,7 @@
         </tr>
     {% endfor %}
   </table>
-{{selected_patient_name}}
+
 
 </section>
 
@@ -51,7 +51,7 @@
         <tr>
           <th>id</th>
           <th>patient id</th>
-          <th>doctor id</th>
+          <th>operator</th>
           <th>procedure type</th>
           <th>tooth</th>
           <th>procedure date</th>
@@ -60,11 +60,17 @@
     
         </tr>
         {% for procedure in procedure_info %}
-            {% if procedure['patient_id'] == patient_id:%}
+            {% if procedure['patient_name'] == selected_patient_name:%}
                 <tr>
                 <td>{{ procedure['id'] }}</td>
-                <td>{{ procedure['patient_id'] }}</td>
-                <td>{{ procedure['user_id'] }}</td>
+                <td>{{ procedure['patient_name'].strip('0123456789') }}</td>
+
+                {% for operator in operator_info: %}
+                    {% if operator['id'] == procedure['operator_id']:%}
+                <td>{{ operator['name'] }}</td>
+                    {% endif %}
+                {% endfor %}
+
                 <td>{{ procedure['procedure_type'] }}</td>
                 <td>{{ procedure['tooth'] }}</td>
                 <td>{{ procedure['procedure_date'] }}</td>
@@ -84,8 +90,8 @@
     else
         procedure form-->
     <h1>add new procedure</h1>
-{{selected_patient_name}}
-operator id is:{{operator_id}}
+
+    <!--
     <form  method="get">
         
         <label for="operator_name">operator name</label>
@@ -123,9 +129,9 @@ operator id is:{{operator_id}}
         <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
 
         <input type="submit" value="sibmit">
-    </form>
-
-    <form  action="/added_procedure" method="post">
+    </form-->
+    
+    <!--form  action="/patient_file" method="post">
         {{procedure_form.hidden_tag()}}
 
         {{procedure_form.operator_name.label}}
@@ -147,12 +153,15 @@ operator id is:{{operator_id}}
 
         {{procedure_form.submit}}
 
-    </form>
-{{selected_patient_name}}
+    </form-->
     
-</section>
+    <!--a href="/added_procedure"><button>add new procedure</button></a-->
+    <form action="/added_procedure" method="post">
+        {{hidden_form.hidden_tag()}}
+        {{hidden_form.selected_patient_name}}
+        <input type="submit" value="add procedure">
+    </form>
 
-<section>
-    <form action="" method="post"></form>
+    
 </section>
 {% endblock %}

@@ -1,6 +1,4 @@
 #import liberaries
-from ast import operator
-import re
 from flask import Flask, render_template, redirect, request, url_for, session, flash
 from flask_session import Session
 from itertools import groupby
@@ -86,7 +84,7 @@ class Procedure(db.Model):
 
     __tablename__ = 'procdure'
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
+    patient_name = db.Column(db.String, db.ForeignKey('patient.name'))#, nullable=False) # changed from id to name 
     operator_id = db.Column(db.Integer, db.ForeignKey('operator.id'), nullable=False)
     clinic_id = db.Column(db.Integer, db.ForeignKey('clinic.id'))
     procedure_type = db.Column(db.String)
@@ -96,7 +94,7 @@ class Procedure(db.Model):
     description = db.Column(db.String)
 
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Name %r>' % self.id
 
 class Clinic(db.Model):
 
@@ -155,7 +153,7 @@ class ProcedureForm(FlaskForm):
     tooth = StringField('tooth')
     price = IntegerField('price')
     description = TextAreaField('description')
-    patient_name = HiddenField('patient name')
+    selected_patient_name = HiddenField('selected_patient name')
     submit = SubmitField('submit')
 
 class LoginForm(FlaskForm):
@@ -400,7 +398,12 @@ def patient_file():
     if name_form.validate_on_submit():
         selected_patient_name = name_form.name.data
         patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
-    
+        patient_info = Patient.query.all()
+        
+        #make the hidden form and add the selected patient name to it to be supmitted
+        hidden_form = HiddenNameForm()
+        hidden_form.selected_patient_name.data = selected_patient_name
+
         procedure_types = ['Examination', 'Root canal treatment', 'Filling', 'Crown', 'Bridge', 'Scaling', 'Extraction', 'Implant', 'Surgery', 'Other']
         
         operators = Operator.query.filter(Operator.user_id == flask_login.current_user.id)
@@ -412,7 +415,7 @@ def patient_file():
 
         procedure_form = ProcedureForm()
         procedure_form.procedure_type.choices = procedure_types
-        procedure_form.patient_name.data = selected_patient_name
+        procedure_form.selected_patient_name.data = selected_patient_name
         procedure_form.operator_name.choices = operator_list
         procedure_form.price.data = 0
 
@@ -429,7 +432,8 @@ def patient_file():
             patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
             operator_id = db.session.query(Operator.id).filter(Operator.name == operator_name).scalar()
 
-            
+            patient_info = Patient.query.all()
+            procedure_info = Procedure.query.all()
 
             #add the data to database
             procedure = Procedure(procedure_type=procedure_type, tooth=tooth, price=price, procedure_date=procedure_date, patient_id=patient_id, operator_id=operator_id, description=description)
@@ -437,11 +441,15 @@ def patient_file():
             db.session.commit()
 
             flash('procedure added')
-            return redirect(url_for('patient_file'), selected_patient_name=selected_patient_name)
+            
+            return render_template('added_procedure.html', selected_patient_name=selected_patient_name, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id)
+
+            #return redirect(url_for('patient_file'), patient_info = patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form)
     
         patient_info = Patient.query.all()
         procedure_info = Procedure.query.all()
-    return render_template('patient_file.html', patient_info = patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form)
+        operator_info = Operator.query.all()
+    return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info)
 
     '''
         hidden_form = HiddenNameForm
@@ -549,44 +557,58 @@ def diagnosis():
 @app.route('/added_procedure', methods = ['GET', 'POST'])
 def added_procedure():
 #get DATA from /patient_file
-    procedure_types = ['Examination', 'Root canal treatment', 'Filling', 'Crown', 'Bridge', 'Scaling', 'Extraction', 'Implant', 'Surgery', 'Other']
-        
-    operators = Operator.query.filter(Operator.user_id == flask_login.current_user.id)
-        
-    operator_list = []
-        
-    for operator in operators:
-        operator_list.append(operator.name)
 
-    procedure_form = ProcedureForm()
-    procedure_form.procedure_type.choices = procedure_types
-    #procedure_form.patient_name.data = selected_patient_name
-    procedure_form.operator_name.choices = operator_list
-    #procedure_form.price.data = 0
-    if procedure_form.validate_on_submit():
+    hidden_form = HiddenNameForm()
+    if hidden_form.validate_on_submit():
+        selected_patient_name = hidden_form.selected_patient_name.data
+
+        procedure_types = ['Examination', 'Root canal treatment', 'Filling', 'Crown', 'Bridge', 'Scaling', 'Extraction', 'Implant', 'Surgery', 'Other']
+        operators = Operator.query.filter(Operator.user_id == flask_login.current_user.id)
+        operator_list = []
+            
+        for operator in operators:
+            operator_list.append(operator.name)
+
+        procedure_form = ProcedureForm()
+        procedure_form.procedure_type.choices = procedure_types
+        #procedure_form.patient_name.data = selected_patient_name
+        procedure_form.operator_name.choices = operator_list
+        procedure_form.selected_patient_name.data = selected_patient_name
+
+        #procedure_form.price.data = 0
+
+        patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
+        
+        if procedure_form.validate_on_submit():
             operator_name = procedure_form.operator_name.data
             procedure_type = procedure_form.procedure_type.data
             tooth = procedure_form.tooth.data
             price = procedure_form.price.data
-            selected_patient_name = procedure_form.patient_name.data
+            selected_patient_name = procedure_form.selected_patient_name.data
             description = procedure_form.description.data
-            
+                
             procedure_date = datetime.now()
 
             patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
             operator_id = db.session.query(Operator.id).filter(Operator.name == operator_name).scalar()
 
-            
+                
 
             #add the data to database
-            procedure = Procedure(procedure_type=procedure_type, tooth=tooth, price=price, procedure_date=procedure_date, patient_id=patient_id, operator_id=operator_id, description=description)
+            procedure = Procedure(procedure_type=procedure_type, tooth=tooth, price=price, procedure_date=procedure_date, patient_name=selected_patient_name, operator_id=operator_id, description=description)
             db.session.add(procedure)
             db.session.commit()
 
             hidden_form = HiddenNameForm()
-            hidden_form.selected_patient_name.data = selected_patient_name
+            #hidden_form.selected_patient_name.data = selected_patient_name
             patient_info = Patient.query.all()
-            return render_template('added_procedure.html', patient_name=selected_patient_name,  operator_id=operator_id, hidden_form=hidden_form)
+            procedure_info= Procedure.query.all()
+            operator_info= Operator.query.all()
+            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info)
+
+            #return render_template('added_procedure.html', selected_patient_name=selected_patient_name,  operator_id=operator_id, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id, operator_name=operator_name)
+        return render_template('added_procedure.html', selected_patient_name=selected_patient_name, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id)
+
 '''
     if request.method == 'POST':
         operator_name = request.form['operator_name']
