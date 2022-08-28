@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>procedure added succsesfully </h1>
+    <a href="/admin_panil"><button>Admin panil</button></a>
+
+    <br>
+
+    
+
+    <form action="/add_appointment" method="post">
+        {{appointment_form.hidden_tag()}}
+
+        {{appointment_form.date.label}}
+        {{appointment_form.date}}
+
+        {{appointment_form.time}}
+
+        {{appointment_form.selected_patient_name}}
+
+        <input type="submit" value="book appointment">
+    </form>
+   selected patient:    
+{{selected_patient_name}}
+
+<br>
+patient id: {{patient_id}}
+
+
+{% endblock %}

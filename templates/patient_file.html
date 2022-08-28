@@ -131,29 +131,7 @@
         <input type="submit" value="sibmit">
     </form-->
     
-    <!--form  action="/patient_file" method="post">
-        {{procedure_form.hidden_tag()}}
-
-        {{procedure_form.operator_name.label}}
-        {{procedure_form.operator_name}}
-
-        {{procedure_form.procedure_type.label}}
-        {{procedure_form.procedure_type}}
-
-        {{procedure_form.tooth.label}}
-        {{procedure_form.tooth}}
-
-        {{procedure_form.price.label}}
-        {{procedure_form.price}}
-
-        {{procedure_form.description.label}}
-        {{procedure_form.description}}
-
-        {{procedure_form.patient_name}}
-
-        {{procedure_form.submit}}
-
-    </form-->
+    
     
     <!--a href="/added_procedure"><button>add new procedure</button></a-->
     <form action="/added_procedure" method="post">
@@ -161,7 +139,11 @@
         {{hidden_form.selected_patient_name}}
         <input type="submit" value="add procedure">
     </form>
-
+    <form action="/add_appointment" method="post">
+        {{hidden_form.hidden_tag()}}
+        {{hidden_form.selected_patient_name}}
+        <input type="submit" value="add appointment">
+    </form>
     
 </section>
 {% endblock %}
