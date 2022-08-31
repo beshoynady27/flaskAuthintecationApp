@@ -171,11 +171,15 @@ class NameForm(FlaskForm):
 
 class HiddenNameForm(FlaskForm):
     selected_patient_name = HiddenField('selected_patient_name')
+    submit = SubmitField('submit')
+
 
 class AppointmentForm(FlaskForm):
     date = DateField('date')
     time = TimeField('time')
     selected_patient_name = HiddenField('selected_patient name')
+    submit = SubmitField('submit')
+
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -631,6 +635,67 @@ def added_procedure():
             #return render_template('added_procedure.html', selected_patient_name=selected_patient_name,  operator_id=operator_id, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id, operator_name=operator_name)
         return render_template('added_procedure.html', selected_patient_name=selected_patient_name, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id)
 
+
+@app.route('/add_appointment', methods = ['GET', 'POST'])
+def add_appointment():
+#get DATA from /patient_file
+
+    hidden_form = HiddenNameForm()
+    if hidden_form.validate_on_submit():
+        selected_patient_name = hidden_form.selected_patient_name.data
+
+        appointment_form = AppointmentForm()
+        appointment_form.selected_patient_name.data = selected_patient_name
+
+        patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
+        
+            #return render_template('added_procedure.html', selected_patient_name=selected_patient_name,  operator_id=operator_id, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id, operator_name=operator_name)
+        return render_template('add_appointment.html', selected_patient_name=selected_patient_name, hidden_form=hidden_form, patient_id=patient_id, appointment_form=appointment_form)
+
+
+
+@app.route('/added_appointment', methods = ['GET', 'POST'])
+def added_appointment():
+#get DATA from /patient_file
+        procedure_types = ['Examination', 'Root canal treatment', 'Filling', 'Crown', 'Bridge', 'Scaling', 'Extraction', 'Implant', 'Surgery', 'Other']
+        operators = Operator.query.filter(Operator.user_id == flask_login.current_user.id)
+        operator_list = []
+            
+        for operator in operators:
+            operator_list.append(operator.name)
+
+        procedure_form = ProcedureForm()
+        procedure_form.procedure_type.choices = procedure_types
+        #procedure_form.patient_name.data = selected_patient_name
+        procedure_form.operator_name.choices = operator_list
+
+        
+        appointment_form = AppointmentForm()
+        
+        if appointment_form.validate_on_submit():
+            date = appointment_form.date.data
+            time = appointment_form.time.data
+            selected_patient_name = appointment_form.selected_patient_name.data
+
+            #patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
+        
+            #add the data to database
+            appointment = Appointments(date=date, time=time, patient_name=selected_patient_name)
+            db.session.add(appointment)
+            db.session.commit()
+
+            hidden_form = HiddenNameForm()
+            #hidden_form.selected_patient_name.data = selected_patient_name
+            patient_info = Patient.query.all()
+            procedure_info= Procedure.query.all()
+            operator_info= Operator.query.all()
+            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, hidden_form=hidden_form, operator_info=operator_info, operators=operators)
+
+            #return render_template('added_procedure.html', selected_patient_name=selected_patient_name,  operator_id=operator_id, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id, operator_name=operator_name)
+        return render_template('add_appointment.html',appointment_form=appointment_form)
+
+
+'''
 @app.route('/add_appointment', methods = ['GET', 'POST'])
 def add_appointment():
     hidden_form = HiddenNameForm()
@@ -658,16 +723,16 @@ def add_appointment():
             db.session.add(appointment)
             db.session.commit()
 
-            #hidden_form = HiddenNameForm()
-            #hidden_form.selected_patient_name.data = selected_patient_name
-            #patient_info = Patient.query.all()
-            #procedure_info= Procedure.query.all()
-            #operator_info= Operator.query.all()
+            hidden_form = HiddenNameForm()
+            hidden_form.selected_patient_name.data = selected_patient_name
+            patient_info = Patient.query.all()
+            procedure_info= Procedure.query.all()
+            operator_info= Operator.query.all()
         
-            #return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info)
+            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info)
 
         return render_template('add_appointment.html', appointment_form=appointment_form, selected_patient_name=selected_patient_name)
-    
+'''
 '''
     if request.method == 'POST':
         operator_name = request.form['operator_name']

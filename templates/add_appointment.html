@@ -7,8 +7,8 @@
     <br>
 
     
-
-    <form action="/add_appointment" method="post">
+<div>
+    <form action="/added_appointment" method="post" id="appointment_form">
         {{appointment_form.hidden_tag()}}
 
         {{appointment_form.date.label}}
@@ -18,8 +18,11 @@
 
         {{appointment_form.selected_patient_name}}
 
-        <input type="submit" value="book appointment">
+        {{appointment_form.submit(form='appointment_form')}}
+
+        
     </form>
+</div>
    selected patient:    
 {{selected_patient_name}}
 

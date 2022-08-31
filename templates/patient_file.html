@@ -139,10 +139,10 @@
         {{hidden_form.selected_patient_name}}
         <input type="submit" value="add procedure">
     </form>
-    <form action="/add_appointment" method="post">
+    <form action={{url_for('add_appointment')}} method="post" id="add_appointment">
         {{hidden_form.hidden_tag()}}
         {{hidden_form.selected_patient_name}}
-        <input type="submit" value="add appointment">
+        {{hidden_form.submit(form='add_appointment')}}
     </form>
     
 </section>
