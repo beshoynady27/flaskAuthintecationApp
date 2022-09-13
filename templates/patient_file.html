@@ -3,6 +3,17 @@
 {% block title %} patient file {% endblock %}
 
 {% block body %}
+<nav class="index_nav" >
+    <div >
+      <a class="navbar-brand" href="#">
+        <img src="/static/dental_manager_logo-removebg-preview.png" alt="" width="300" height=auto>
+      </a>
+    </div>
+    <div>
+        <button><a href="/admin_panil">admin panil</a></button>
+        
+    </div>
+</nav>
 <section>
 
 <h1>patient personal information</h1>
@@ -91,45 +102,7 @@
         procedure form-->
     <h1>add new procedure</h1>
 
-    <!--
-    <form  method="get">
-        
-        <label for="operator_name">operator name</label>
-        <select name="operator_name" id="">
-            {% for operator in operators%}
-                <option value="{{ operator['name'] }}">{{operator['name']}}</option>
-            {% endfor %}
-        </select>
-        {{operators.name}}
-        <label for="procedure_type">procedure type</label>
-        
-        <select name="procedure_type">
-            <option value="endo">Root canal treatment</option>
-            <option value="operative">Composit filling</option>
-            <option value="scalling">Scalling</option>
-            <option value="crown"> Crown</option>
-            <option value="bridge">Bridge</option>
-            <option value="implant">Implant</option>
-            <option value="surgery">Surgery</option>
-
-            <option value="other">Other</option>
-            
-        </select>
-
-        <label for="teeth">teeth</label>
-        <input type="text" name="teeth">
-
-        <label for="price">price</label>
-        <input type="number" name="price" value="0" required>
-
-        <label for="description">description</label>
-        <textarea name="description" id="" cols="10" rows="2" placeholder="description"> </textarea>
-        
-
-        <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
-
-        <input type="submit" value="sibmit">
-    </form-->
+    
     
     
     
@@ -142,7 +115,8 @@
     <form action={{url_for('add_appointment')}} method="post" id="add_appointment">
         {{hidden_form.hidden_tag()}}
         {{hidden_form.selected_patient_name}}
-        {{hidden_form.submit(form='add_appointment')}}
+        
+        {{hidden_form.submit(form='add_appointment', value='add appointment')}}
     </form>
     
 </section>

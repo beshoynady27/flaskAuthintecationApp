@@ -104,6 +104,8 @@ body{
     border-style: solid;
     border-color: var(--blue);
     border-width: thick;
+    border-radius: 10%;
+    
     
 }
 

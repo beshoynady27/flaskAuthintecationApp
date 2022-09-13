@@ -34,7 +34,28 @@
         <input type="submit" value="submit">
     </form>
 
-    <form  method="get">
+    <form method="post">
+        {{operator_form.hidden_tag()}}
+
+        {{operator_form.name.label}}
+        {{operator_form.name}}
+
+        {{operator_form.email.label}}
+        {{operator_form.email}}
+
+        {{operator_form.gender.label}}
+        {{operator_form.gender}}
+
+        {{operator_form.phone.label}}
+        {{operator_form.phone}}
+
+        {{operator_form.speciality.label}}
+        {{operator_form.speciality}}
+
+        <input type="submit" value="submit">
+
+    </form>
+    <form action="/added_room"  method="post">
         {% set count = [0] %}
         name yoyr rooms:
             <br>
@@ -50,9 +71,32 @@
         {% endfor %}
         <input type="submit" value="submit">
     </form>
+
+    <form action="/added_room"  method="get">
+        {% set count = [0] %}
+        name yoyr rooms:
+            <br>
+        {%for x in range( clinic_number ) :%}
+
+            {% if count.append(count.pop() + 1) %}{% endif %} {# increment count by 1 #}
+            {{clinic_form.hidden_tag()}}
+
+            <label for="name">room {{count[0]}} name</label>
+            {{clinic_form.name(value="Room {{count[0]}}")}}
+            
+                
+            
+        {% endfor %}
+        <input type="submit" value="submit">
+    </form>
     {% for message in get_flashed_messages() %}
         hi {{message}}
     {% endfor %}
     {{clinic_number}}
+
+    <br>
+    {{operators}}
+    <br>
+    {{operator_list}}
 </body>
 </html>

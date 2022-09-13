@@ -110,6 +110,7 @@ class Appointments(db.Model):
 
     __tablename__ = 'appointments'
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     patient_name = db.Column(db.String, db.ForeignKey('patient.name'))#, nullable=False) # changed from id to name 
     date = db.Column(db.Date)
     time = db.Column(db.Time)
@@ -180,7 +181,15 @@ class AppointmentForm(FlaskForm):
     selected_patient_name = HiddenField('selected_patient name')
     submit = SubmitField('submit')
 
-
+class OperatorForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    email = EmailField('email', validators=[DataRequired()])
+    gender = StringField('gender')
+    phone = IntegerField('phone')
+    speciality = StringField('speciality')
+    
+class ClinicForm(FlaskForm):
+    name = StringField('name')
 @login_manager.user_loader
 def user_loader(user_id):
     
@@ -252,9 +261,10 @@ def admin_panil():
 
     #last month income
     last_month_income = 0
-    today = datetime.today()
+    today = date.today()
     this_month = today.month
     this_year = today.year
+
     last_month_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, this_month, 1)).filter(Procedure.operator_id == flask_login.current_user.id)
     for procedure in last_month_procedures:
         last_month_income = int(last_month_income) + int(procedure.price)
@@ -332,6 +342,13 @@ def admin_panil():
     #this is hwo we pass data to the form from the route. or form.field.data = the_value
     form.name.choices = patient_list
 
+
+    
+    # show the upcoming appointments
+    today_appointments = Appointments.query.order_by(Appointments.date).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date == today )
+    all_appointments = Appointments.query.order_by(Appointments.date).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date > today )
+    
+
     return render_template('admin_panil.html', patients = patients, total_income=total_income, prices=prices, procedures=procedures,
      last_month_income=last_month_income, income_from_endo=income_from_endo, income_from_operative=income_from_operative,
       income_from_bridge=income_from_bridge, income_from_crown=income_from_crown, income_from_implant=income_from_implant,
@@ -340,7 +357,7 @@ def admin_panil():
         income_from_scaling_this_month=income_from_scaling_this_month, income_from_crown_this_month=income_from_crown_this_month, 
         income_from_bridge_this_month=income_from_bridge_this_month, income_from_implant_this_month=income_from_implant_this_month, 
         income_from_surgery_this_month=income_from_surgery_this_month, income_from_other_this_month=income_from_other_this_month, form=form,
-        patient_list=patient_list)
+        patient_list=patient_list, today_appointments=today_appointments, today=today,all_appointments=all_appointments)
 
 
 
@@ -413,45 +430,10 @@ def patient_file():
         hidden_form = HiddenNameForm()
         hidden_form.selected_patient_name.data = selected_patient_name
 
-        procedure_types = ['Examination', 'Root canal treatment', 'Filling', 'Crown', 'Bridge', 'Scaling', 'Extraction', 'Implant', 'Surgery', 'Other']
         
-        operators = Operator.query.filter(Operator.user_id == flask_login.current_user.id)
-        
-        operator_list = []                                                                                                       
-        
-        for operator in operators:
-            operator_list.append(operator.name)
-
-        procedure_form = ProcedureForm()
-        procedure_form.procedure_type.choices = procedure_types
-        procedure_form.selected_patient_name.data = selected_patient_name
-        procedure_form.operator_name.choices = operator_list
-        procedure_form.price.data = 0
 
         
-        if procedure_form.validate_on_submit():
-            operator_name = procedure_form.operator_name.data
-            procedure_type = procedure_form.procedure_type.data
-            tooth = procedure_form.tooth.data
-            price = procedure_form.price.data
-            selected_patient_name = procedure_form.patient_name.data
-            description = procedure_form.description.data
-            procedure_date = datetime.now()
-
-            patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
-            operator_id = db.session.query(Operator.id).filter(Operator.name == operator_name).scalar()
-
-            patient_info = Patient.query.all()
-            procedure_info = Procedure.query.all()
-
-            #add the data to database
-            procedure = Procedure(procedure_type=procedure_type, tooth=tooth, price=price, procedure_date=procedure_date, patient_id=patient_id, operator_id=operator_id, description=description)
-            db.session.add(procedure)
-            db.session.commit()
-
-            flash('procedure added')
-            
-            return render_template('added_procedure.html', selected_patient_name=selected_patient_name, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id)
+        
 
             #return redirect(url_for('patient_file'), patient_info = patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form)
         
@@ -475,7 +457,7 @@ def patient_file():
         '''
 
     return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name,
-     patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info)
+     patient_id=patient_id, hidden_form=hidden_form, operator_info=operator_info)
 
     '''
         hidden_form = HiddenNameForm
@@ -593,7 +575,8 @@ def added_procedure():
         operator_list = []
             
         for operator in operators:
-            operator_list.append(operator.name)
+            #operator.name.strip('1234567890')
+            operator_list.append(operator.name.strip('1234567890'))
 
         procedure_form = ProcedureForm()
         procedure_form.procedure_type.choices = procedure_types
@@ -612,11 +595,12 @@ def added_procedure():
             price = procedure_form.price.data
             selected_patient_name = procedure_form.selected_patient_name.data
             description = procedure_form.description.data
-                
+            operator_name_with_id = operator_name + str(flask_login.current_user.id)
+            
             procedure_date = datetime.now()
 
             patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
-            operator_id = db.session.query(Operator.id).filter(Operator.name == operator_name).scalar()
+            operator_id = db.session.query(Operator.id).filter(Operator.name == operator_name_with_id).scalar()
 
                 
 
@@ -657,17 +641,7 @@ def add_appointment():
 @app.route('/added_appointment', methods = ['GET', 'POST'])
 def added_appointment():
 #get DATA from /patient_file
-        procedure_types = ['Examination', 'Root canal treatment', 'Filling', 'Crown', 'Bridge', 'Scaling', 'Extraction', 'Implant', 'Surgery', 'Other']
-        operators = Operator.query.filter(Operator.user_id == flask_login.current_user.id)
-        operator_list = []
-            
-        for operator in operators:
-            operator_list.append(operator.name)
-
-        procedure_form = ProcedureForm()
-        procedure_form.procedure_type.choices = procedure_types
-        #procedure_form.patient_name.data = selected_patient_name
-        procedure_form.operator_name.choices = operator_list
+        
 
         
         appointment_form = AppointmentForm()
@@ -676,11 +650,11 @@ def added_appointment():
             date = appointment_form.date.data
             time = appointment_form.time.data
             selected_patient_name = appointment_form.selected_patient_name.data
-
+            user_id = flask_login.current_user.id
             #patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
         
             #add the data to database
-            appointment = Appointments(date=date, time=time, patient_name=selected_patient_name)
+            appointment = Appointments(date=date, time=time, patient_name=selected_patient_name, user_id=user_id)
             db.session.add(appointment)
             db.session.commit()
 
@@ -689,7 +663,7 @@ def added_appointment():
             patient_info = Patient.query.all()
             procedure_info= Procedure.query.all()
             operator_info= Operator.query.all()
-            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, hidden_form=hidden_form, operator_info=operator_info, operators=operators)
+            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, hidden_form=hidden_form, operator_info=operator_info)
 
             #return render_template('added_procedure.html', selected_patient_name=selected_patient_name,  operator_id=operator_id, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id, operator_name=operator_name)
         return render_template('add_appointment.html',appointment_form=appointment_form)
@@ -783,6 +757,32 @@ def add_new_doctor():
 @app.route('/setup_account', methods=['GET', 'POST'])
 def setup_account():
     operator_name = None
+    operators = db.session.query(Operator.name).all()
+
+    operator_form = OperatorForm()
+    clinic_form = ClinicForm()
+
+    if operator_form.validate_on_submit():
+        operator_name = operator_form.name.data
+        email = operator_form.email.data
+        phone_number = operator_form.phone.data
+        gender = operator_form.gender.data
+        speciality = operator_form.speciality.data
+        operator_name_with_id = operator_name + str(flask_login.current_user.id)
+
+        operators = db.session.query(Operator.name).all()
+        operator_list = []
+        for operator in operators:
+            operator_list.append(operator.name)
+
+        if operator_name in operator_list:
+            flash('operator already exist')
+        else:
+            operator= Operator(name=operator_name_with_id, email=email, phone_number=phone_number, gender=gender, speciality=speciality, user_id=flask_login.current_user.id)
+            db.session.add(operator)
+            db.session.commit()
+            flash(f'{operator_name} added successfully as an operator in your clinic!')
+    '''
     if request.method == 'POST':
         operator_name = request.form['name']
         email = request.form['email']
@@ -790,26 +790,61 @@ def setup_account():
         gender = request.form['gender']
         speciality = request.form['speciality']
         operators = db.session.query(Operator.name).all()
-        if operator_name in operators:
+        operator_list = []
+        for operator in operators:
+            operator_list.append(operator.name)
+        if operator_name in operator_list:
             flash('operator already exist')
         else:
             operator= Operator(name=operator_name, email=email, phone_number=phone_number, gender=gender, speciality=speciality, user_id=flask_login.current_user.id)
             db.session.add(operator)
             db.session.commit()
             flash(f'{operator_name} added successfully as an operator in your clinic!')
-            
+    '''
+
     clinic_number = db.session.query(User.clinic_num).filter(User.id == flask_login.current_user.id).scalar()
+    '''
+    if clinic_form.validate_on_submit:
+        name = clinic_form.name.data
+        clinic = Clinic(name=name, user_id=flask_login.current_user.id)
+        db.session.add(clinic)
+        db.session.commit()
+
+        flash('clinic added successfully')
     
     if request.method == 'Get':
         name = request.form['name']
         clinic = Clinic(name=name, user_id=flask_login.current_user.id)
-        flash('clinic added successfully')
         db.session.add(clinic)
         db.commit()
-        
-        
 
-    return render_template('setup_account.html', clinic_number=clinic_number, operator_name=operator_name)
+        flash('clinic added successfully')
+    '''
+        
+    return render_template('setup_account.html', clinic_number=clinic_number, operator_name=operator_name, operator_form=operator_form,
+     operators=operators, clinic_form=clinic_form)
+
+@app.route('/added_room', methods=['GET', 'POST'])
+def added_room():
+    clinic_number = db.session.query(User.clinic_num).filter(User.id == flask_login.current_user.id).scalar()
+    clinic_form = ClinicForm()
+    if clinic_form.validate_on_submit:
+        name = clinic_form.name.data
+        clinic = Clinic(name=name, user_id=flask_login.current_user.id)
+        db.session.add(clinic)
+        db.session.commit()
+
+        flash('clinic added successfully')
+        return redirect('/admin_panil')
+    
+    if request.method == 'Post':
+        name = request.form['name']
+        clinic = Clinic(name=name, user_id=flask_login.current_user.id)
+        db.session.add(clinic)
+        db.commit()
+
+        flash('clinic added successfully')
+        return redirect('/admin_panil')
 
 '''
 TODO :
