@@ -345,8 +345,8 @@ def admin_panil():
 
     
     # show the upcoming appointments
-    today_appointments = Appointments.query.order_by(Appointments.date).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date == today )
-    all_appointments = Appointments.query.order_by(Appointments.date).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date > today )
+    today_appointments = Appointments.query.order_by(Appointments.date).order_by(Appointments.time).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date == today )
+    all_appointments = Appointments.query.order_by(Appointments.date).order_by(Appointments.time).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date > today )
     
 
     return render_template('admin_panil.html', patients = patients, total_income=total_income, prices=prices, procedures=procedures,
@@ -420,7 +420,26 @@ def patient_file():
 
     name_form = NameForm()
     name_form.name.choices = patient_list
-    
+    if request.method == 'POST':
+        selected_patient_name = request.form["name"]
+        patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
+        patient_info = Patient.query.all()
+        
+        #make the hidden form and add the selected patient name to it to be supmitted
+        hidden_form = HiddenNameForm()
+        hidden_form.selected_patient_name.data = selected_patient_name
+
+        
+
+        
+        
+
+            #return redirect(url_for('patient_file'), patient_info = patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form)
+        
+        patient_info = Patient.query.all()
+        procedure_info = Procedure.query.all()
+        operator_info = Operator.query.all()
+
     if name_form.validate_on_submit():
         selected_patient_name = name_form.name.data
         patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
@@ -846,6 +865,101 @@ def added_room():
         flash('clinic added successfully')
         return redirect('/admin_panil')
 
+
+@app.route('/financials')
+def financials():
+    patients = Patient.query.filter(Patient.user_id == flask_login.current_user.id)
+    prices = db.session.query(Procedure.price).all()
+    procedures = Procedure.query.filter(Procedure.operator_id == flask_login.current_user.id)
+    ################# FINANCIAL SYSTEM ##############
+    #total income
+    total_income = 0
+    for procedure in procedures:
+        total_income = int(total_income) + int(procedure.price)
+    
+
+    #last month income
+    last_month_income = 0
+    today = date.today()
+    this_month = today.month
+    this_year = today.year
+
+    last_month_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, this_month, 1)).filter(Procedure.operator_id == flask_login.current_user.id)
+    for procedure in last_month_procedures:
+        last_month_income = int(last_month_income) + int(procedure.price)
+
+
+
+    def income_this_month(procedure):
+        last_month_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, this_month, 1)).filter(Procedure.procedure_type == procedure ).filter(Procedure.operator_id == flask_login.current_user.id)
+        income_last_month = 0
+        for procedure in last_month_procedures:
+            income_last_month = int(income_last_month) + int(procedure.price)
+        return income_last_month
+
+    def income_this_year(procedure):
+        last_year_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, 1, 1)).filter(Procedure.procedure_type == procedure ).filter(Procedure.operator_id == flask_login.current_user.id)
+        income_last_year = 0
+        for procedure in last_year_procedures:
+            income_last_year = int(income_last_year) + int(procedure.price)
+        return income_last_year
+
+
+    #income from ENDO
+    income_from_endo = income_this_year('endo')
+    
+    #this month income from ENDO 
+    income_from_endo_this_month = income_this_month('endo')
+
+    #incoe from OPERATIVE 
+    income_from_operative = income_this_year('operative')
+
+    #this month income from OPERATIVE
+    income_from_operative_this_month = income_this_month('operative')
+
+    #income from SCALING
+    income_from_scaling = income_this_year('scaling')
+
+    #this month income from SCALING
+    income_from_scaling_this_month = income_this_month('scaling')
+
+    #income from CROWN
+    income_from_crown = income_this_year('crown')
+
+    #this month income from CROWN
+    income_from_crown_this_month = income_this_month('crown')
+
+    #income from BRIDGE
+    income_from_bridge =income_this_year('bridge')
+
+    #this month income from BRIDGE
+    income_from_bridge_this_month = income_this_month('bridge')
+
+    #income from IMPLANT
+    income_from_implant = income_this_year('implant')
+
+    #this month income from IMPLANT
+    income_from_implant_this_month = income_this_month('implant')
+
+    #income from SURGERY
+    income_from_surgery = income_this_year('surgery')
+
+    #this month income from SARGERY
+    income_from_surgery_this_month = income_this_month('surgery')
+
+    #income from OTHER
+    income_from_other = income_this_year('other')
+
+    #this month income from OTHER
+    income_from_other_this_month = income_this_month('other')
+
+    return render_template('financials.html', income_from_endo=income_from_endo, income_from_endo_this_month=income_from_endo_this_month,
+    income_from_operative=income_from_operative, income_from_operative_this_month=income_from_operative_this_month,
+    income_from_scaling=income_from_scaling, income_from_scaling_this_month=income_from_scaling_this_month, income_from_crown=income_from_crown,
+    income_from_crown_this_month=income_from_crown_this_month, income_from_crown_this_month=income_from_crown_this_month,
+    income_from_bridge=income_from_bridge, income_from_bridge_this_month=income_from_bridge_this_month, income_from_implant=income_from_implant,
+    income_from_implant_this_month=income_from_implant_this_month, income_from_surgery=income_from_surgery, income_from_surgery_this_month=income_from_surgery_this_month,
+    income_from_other=income_from_other, income_from_other_this_month=income_from_other_this_month)
 '''
 TODO :
 - validate the new patient name does not exist in the database - DONE
