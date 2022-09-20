@@ -12,6 +12,15 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
     <nav class="index_nav" >
         <div >
           <a class="navbar-brand" href="#">
@@ -23,5 +32,96 @@
             
         </div>
     </nav>
+    <h2>add outcome</h2>
+    <form  method="post">
+      {{form.hidden_tag()}}
+      {{form.outcome_type.label}}
+      {{form.outcome_type}}
+
+      {{form.amount.label}}
+      {{form.amount}}
+
+      {{form.description.label}}
+      {{form.description}}
+      <input type="submit" value="Add outcome">
+    </form>
+
+    <section >
+        <h1>financial </h1>
+
+        <h3>this year income</h3>
+        total income =  {{total_income}} 
+        <br>
+        income from examination = {{income_from_examination}}
+        <br>
+        income from endo = {{income_from_endo}}
+        <br>
+        operative = {{income_from_operative}}
+        <br>
+        crown = {{income_from_crown}}
+        <br>
+        bridge = {{income_from_bridge}}
+        <br>
+        Denture = {{income_from_denture}}
+        <br>
+        scaling = {{income_from_scaling}}
+        <br>
+        srgery = {{income_from_surgery}}
+        <br>
+        implant = {{income_from_implant}}
+        <br>
+        other = {{income_from_other}}
+        
+        <br>
+        <h3>outcome</h3>
+        salary: {{salary_outcome}}
+        <br>
+        rent: {{rent_outcome}}
+        <br>
+        materials: {{materials_outcome}}
+        <br>
+        lab: {{lab_outcome}}
+        <br>
+        other: {{other_outcome}}
+        <br>
+        Total: {{last_year_outcome}}
+
+        <br>
+        <h3>this month income</h3>
+        total income = {{last_month_income}}
+        <br>
+        examination = {{income_from_examination_this_month}}
+        <br>
+        endo = {{income_from_endo_this_month}}
+        <br>
+        operative = {{income_from_operative_this_month}}
+        <br>
+        crown = {{income_from_crown_this_month}}
+        <br>
+        bridge = {{income_from_bridge_this_month}}
+        <br>
+        denture = {{income_from_denture_this_month}}
+        <br>
+        scaling = {{income_from_scaling_this_month}}
+        <br>
+        surgery = {{income_from_other_this_month}}
+        <br>
+        implant = {{income_from_implant_this_month}}
+        <br>
+        other = {{income_from_other_this_month}}
+        <h3>outcome</h3>
+        salary: {{salary_outcome_this_month}}
+        <br>
+        rent: {{rent_outcome_this_month}}
+        <br>
+        materials: {{materials_outcome_this_month}}
+        <br>
+        lab: {{lab_outcome_this_month}}
+        <br>
+        other: {{other_outcome_this_month}}
+        <br>
+        Total: {{last_month_outcome}}
+
+    </section>
 </body>
 </html>
