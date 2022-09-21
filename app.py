@@ -644,7 +644,7 @@ def added_procedure():
                 
 
             #add the data to database
-            procedure = Procedure(procedure_type=procedure_type, tooth=tooth, price=price, procedure_date=procedure_date, patient_name=selected_patient_name, operator_id=operator_id, description=description)
+            procedure = Procedure(procedure_type=procedure_type, tooth=tooth, price=price, procedure_date=procedure_date, patient_name=selected_patient_name, operator_id=operator_id, description=description, user_id=flask_login.current_user.id)
             db.session.add(procedure)
             db.session.commit()
 
@@ -892,7 +892,7 @@ def financials():
 
 
     #query data to choose the patient name to go ot patient file
-    procedures = Procedure.query.filter(Procedure.operator_id == flask_login.current_user.id)
+    procedures = Procedure.query.filter(Procedure.user_id == flask_login.current_user.id)
 
     ################# FINANCIAL SYSTEM ##############
     #total income
@@ -907,21 +907,21 @@ def financials():
     this_month = today.month
     this_year = today.year
 
-    last_month_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, this_month, 1)).filter(Procedure.operator_id == flask_login.current_user.id)
+    last_month_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, this_month, 1)).filter(Procedure.user_id == flask_login.current_user.id)
     for procedure in last_month_procedures:
         last_month_income = int(last_month_income) + int(procedure.price)
 
 
 
     def income_this_month(procedure):
-        last_month_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, this_month, 1)).filter(Procedure.procedure_type == procedure ).filter(Procedure.operator_id == flask_login.current_user.id)
+        last_month_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, this_month, 1)).filter(Procedure.procedure_type == procedure ).filter(Procedure.user_id == flask_login.current_user.id)
         income_last_month = 0
         for procedure in last_month_procedures:
             income_last_month = int(income_last_month) + int(procedure.price)
         return income_last_month
 
     def income_this_year(procedure):
-        last_year_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, 1, 1)).filter(Procedure.procedure_type == procedure ).filter(Procedure.operator_id == flask_login.current_user.id)
+        last_year_procedures = Procedure.query.filter(Procedure.procedure_date > date(this_year, 1, 1)).filter(Procedure.procedure_type == procedure ).filter(Procedure.user_id == flask_login.current_user.id)
         income_last_year = 0
         for procedure in last_year_procedures:
             income_last_year = int(income_last_year) + int(procedure.price)
@@ -1029,6 +1029,20 @@ def financials():
     for outcome in last_month_outcome_table:
         last_month_outcome = int(last_month_outcome) + int(outcome.amount)
 
+    total_revenue_this_month = last_month_income - last_month_outcome
+    total_revenue_this_year = total_income - last_year_outcome
+
+    month_income_chart_list = [income_from_examination_this_month, income_from_endo_this_month, income_from_operative_this_month, 
+    income_from_crown_this_month,income_from_bridge_this_month , income_from_scaling_this_month, income_from_surgery_this_month,
+    income_from_implant_this_month, income_from_other_this_month]
+
+    year_income_chart_list = [income_from_examination, income_from_endo, income_from_operative, 
+    income_from_crown, income_from_bridge, income_from_scaling, income_from_surgery,
+    income_from_implant, income_from_other_this_month]
+
+    month_outcome_chart_list = [salary_outcome_this_month, rent_outcome_this_month, materials_outcome_this_month, lab_outcome_this_month, other_outcome_this_month]
+    year_outcome_chart_list = [salary_outcome, rent_outcome, materials_outcome, lab_outcome, other_outcome]
+
     return render_template('financials.html', income_from_endo=income_from_endo, income_from_endo_this_month=income_from_endo_this_month,
     income_from_operative=income_from_operative, income_from_operative_this_month=income_from_operative_this_month,
     income_from_scaling=income_from_scaling, income_from_scaling_this_month=income_from_scaling_this_month, income_from_crown=income_from_crown,
@@ -1041,7 +1055,9 @@ def financials():
     salary_outcome_this_month=salary_outcome_this_month, rent_outcome_this_month=rent_outcome_this_month, 
     materials_outcome_this_month=materials_outcome_this_month, lab_outcome_this_month=lab_outcome_this_month, other_outcome_this_month=other_outcome_this_month,
     salary_outcome=salary_outcome, rent_outcome=rent_outcome, materials_outcome=materials_outcome, lab_outcome=lab_outcome, other_outcome=other_outcome, 
-    last_month_outcome=last_month_outcome, last_year_outcome=last_year_outcome)
+    last_month_outcome=last_month_outcome, last_year_outcome=last_year_outcome, month_income_chart_list=month_income_chart_list,
+    total_revenue_this_month=total_revenue_this_month, total_revenue_this_year=total_revenue_this_year, year_income_chart_list=year_income_chart_list,
+    month_outcome_chart_list=month_outcome_chart_list, year_outcome_chart_list=year_outcome_chart_list)
 '''
 TODO :
 - validate the new patient name does not exist in the database - DONE
