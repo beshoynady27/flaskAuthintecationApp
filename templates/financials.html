@@ -206,6 +206,119 @@
             color: white;
             font-size: 20;
         }
+
+
+        /* The Modal (background) */
+.income_modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100vh; /* Full height */
+  overflow-y:hidden; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.income_modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  height: 80vh;
+  overflow-y: scroll;
+  border-radius: 25px;
+}
+
+
+/* The Close Button */
+.income_close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.income_close:hover,
+.income_close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+ /* The Modal (background) */
+ .outcome_modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100vh; /* Full height */
+  overflow-y:hidden; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  
+}
+
+/* Modal Content/Box */
+.outcome_modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  height: 80vh;
+  overflow-y: scroll;
+  border-radius: 25px;
+}
+
+/* The Close Button */
+.outcome_close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.outcome_close:hover,
+.outcome_close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/*modals scrollbar*/
+.income_modal-content::-webkit-scrollbar{
+          width: 1vw;
+        }
+
+        .income_modal-content::-webkit-scrollbar-thumb{
+          background-color: rgb(48,107,232);
+          border-radius: 25px;
+        }
+        .income_modal-content::-webkit-scrollbar-track{
+          background-color: rgba(92, 92, 92, 0.459);
+          border-radius: 25px;
+        }
+
+        .outcome_modal-content::-webkit-scrollbar{
+          width: 1vw;
+        }
+
+        .outcome_modal-content::-webkit-scrollbar-thumb{
+          background-color: rgb(48,107,232);
+          border-radius: 25px;
+        }
+        .outcome_modal-content::-webkit-scrollbar-track{
+          background-color: rgba(92, 92, 92, 0.459);
+          border-radius: 25px;
+        }
   </style>
 </head>
 <body>
@@ -249,7 +362,7 @@
       <div class="financials_in">
         <div class="txt_btn">
         <h1>In</h1>
-        <a href=""><button class="button">Income history</button></a>
+        <button class="button" id="income_history_btn">Income history</button>
         </div>
         <div class="financials_in_month">
           <div class="financials_in_month_txt">
@@ -317,7 +430,7 @@
       <div class="financials_in">
           <div class="txt_btn">
           <h1>Out</h1>
-          <a href=""><button class="button">Outcome history</button></a>
+          <button class="button" id="outcome_history_btn">Outcome history</button>
           </div>
           <div class="financials_in_month">
             <div class="financials_in_month_txt">
@@ -364,6 +477,71 @@
 
     <div class="financials_revenue">
       <h1> total revenue: {{total_revenue_this_year}} </h1>
+    </div>
+
+
+    <!--outcome history modal -->
+    <div id="outcome_history_modal" class="outcome_modal">
+      <div class="outcome_modal-content">
+        <span class="outcome_close">&times;</span>
+        <p>
+          <table class="table table-hover">
+            <tr>
+              <th>Outcome type</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Description</th>
+
+            </tr>
+            {% for outcome in outcome_history %}
+                
+                    <tr>
+                    <td>{{ outcome['outcome_type'] }}</td>
+                    <td>{{ outcome['outcome_date'] }}</td>
+                    <td>{{ outcome['amount'] }}</td>
+                    <td>{{ outcome['description'] }}</td>
+
+                    
+                    
+    
+                
+                </tr>
+            {% endfor %}
+          </table>
+        </p>
+      </div>
+    </div>
+
+    <!--income history modal -->
+    <div id="income_history_modal" class="income_modal">
+      <div class="income_modal-content">
+        <span class="income_close">&times;</span>
+        <p>
+          <table class="table table-hover">
+            <tr>
+              <th>Patient Name</th>
+              <th>Procedure type</th>
+              <th>Date</th>
+              <th>Amount</th>
+
+            </tr>
+            {% for income in income_history %}
+                
+                    <tr>
+                    <td>{{ income['patient_name'] }}</td>
+                    <td>{{ income['procedure_type'] }}</td>
+                    <td>{{ income['procedure_date'] }}</td>
+                    <td>{{ income['price'] }}</td>
+
+                    
+                    
+    
+                
+                </tr>
+            {% endfor %}
+          </table>
+        </p>
+      </div>
     </div>
     <!--section >
         <h1>financial </h1>
@@ -595,6 +773,61 @@
         }
     }
 });
+
+// OUTCOME MODAL
+// Get the modal
+var outcome_modal = document.getElementById("outcome_history_modal");
+
+// Get the button that opens the modal
+var outcome_btn = document.getElementById("outcome_history_btn");
+
+// Get the <span> element that closes the modal
+var outcome_span = document.getElementsByClassName("outcome_close")[0];
+
+// When the user clicks on the button, open the modal
+outcome_btn.onclick = function() {
+  outcome_modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+outcome_span.onclick = function() {
+  outcome_modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == outcome_modal) {
+    outcome_modal.style.display = "none";
+  }
+}
+
+
+// INCOME MODAL
+// Get the modal
+var income_modal = document.getElementById("income_history_modal");
+
+// Get the button that opens the modal
+var income_btn = document.getElementById("income_history_btn");
+
+// Get the <span> element that closes the modal
+var income_span = document.getElementsByClassName("income_close")[0];
+
+// When the user clicks on the button, open the modal
+income_btn.onclick = function() {
+  income_modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+income_span.onclick = function() {
+  income_modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == income_modal) {
+    income_modal.style.display = "none";
+  }
+}
 </script>
 </body>
 </html>

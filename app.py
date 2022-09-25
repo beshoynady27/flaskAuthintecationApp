@@ -5,6 +5,7 @@ from itertools import groupby
 from datetime import datetime, date
 import flask_login
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 #liberaries for WTForms
 from flask_wtf import FlaskForm
 from pyparsing import And
@@ -1043,6 +1044,14 @@ def financials():
     month_outcome_chart_list = [salary_outcome_this_month, rent_outcome_this_month, materials_outcome_this_month, lab_outcome_this_month, other_outcome_this_month]
     year_outcome_chart_list = [salary_outcome, rent_outcome, materials_outcome, lab_outcome, other_outcome]
 
+
+    # outcome history
+    outcome_history = Outcome.query.filter(Outcome.user_id == flask_login.current_user.id).order_by(desc(Outcome.outcome_date))
+
+    # outcome history
+    income_history = Procedure.query.filter(Procedure.user_id == flask_login.current_user.id).order_by(desc(Procedure.procedure_date))
+    
+
     return render_template('financials.html', income_from_endo=income_from_endo, income_from_endo_this_month=income_from_endo_this_month,
     income_from_operative=income_from_operative, income_from_operative_this_month=income_from_operative_this_month,
     income_from_scaling=income_from_scaling, income_from_scaling_this_month=income_from_scaling_this_month, income_from_crown=income_from_crown,
@@ -1057,7 +1066,16 @@ def financials():
     salary_outcome=salary_outcome, rent_outcome=rent_outcome, materials_outcome=materials_outcome, lab_outcome=lab_outcome, other_outcome=other_outcome, 
     last_month_outcome=last_month_outcome, last_year_outcome=last_year_outcome, month_income_chart_list=month_income_chart_list,
     total_revenue_this_month=total_revenue_this_month, total_revenue_this_year=total_revenue_this_year, year_income_chart_list=year_income_chart_list,
-    month_outcome_chart_list=month_outcome_chart_list, year_outcome_chart_list=year_outcome_chart_list)
+    month_outcome_chart_list=month_outcome_chart_list, year_outcome_chart_list=year_outcome_chart_list, income_history=income_history, 
+    outcome_history=outcome_history)
+
+
+
+
+@app.route('/clinic_analytics')
+def clinic_analytics():
+
+    return render_template('clinic_analytics.html')
 '''
 TODO :
 - validate the new patient name does not exist in the database - DONE
