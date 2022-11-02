@@ -38,22 +38,23 @@
         <input type="submit" value="submit">
 
     </form>
-    <form action="/added_room"  method="post">
-        {% set count = [0] %}
-        name yoyr rooms:
+
+    {% set count = [0] %}
+    name your rooms:
+    {%for x in range( clinic_number ) :%}
+        <form action="/added_room"  method="post">
             <br>
-        {%for x in range( clinic_number ) :%}
 
             {% if count.append(count.pop() + 1) %}{% endif %} {# increment count by 1 #}
             
             <label for="name">room {{count[0]}} name</label>
             <input type="text" name="name" value="Room {{count[0]}}">
+            <input type="submit" value="submit">
+        </form>
             
                 
             
         {% endfor %}
-        <input type="submit" value="submit">
-    </form>
 
     <form action="/added_room"  method="get">
         {% set count = [0] %}

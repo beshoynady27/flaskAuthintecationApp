@@ -116,6 +116,7 @@ class Appointments(db.Model):
     patient_name = db.Column(db.String, db.ForeignKey('patient.name'))#, nullable=False) # changed from id to name 
     date = db.Column(db.Date)
     time = db.Column(db.Time)
+    room = db.Column(db.String)
 
     def __repr__(self):
         return '<Name %r>' % self.name
@@ -127,7 +128,7 @@ class Diagnosis(db.Model):
     subject = db.Column(db.String)
     diagnosis =  db.Column(db.String)
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Name %r>' % self.id
     
 class Outcome(db.Model):
     __tablename__ = 'outcome'
@@ -145,39 +146,46 @@ db.create_all()
 
 #make the Form class
 class UserForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
-    email = EmailField('email', validators=[DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
-    clinic_name = StringField('clinic_name')
-    clinic_num = IntegerField('clinic_num')
-    submit = SubmitField('submit')
+    name = StringField('Name', validators=[DataRequired()])
+    email = EmailField('E-mail', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    clinic_name = StringField('Clinic name')
+    clinic_num = IntegerField('Number of rooms')
+    submit = SubmitField('Submit')
 
 class PatientForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
-    email = EmailField('email', validators=[DataRequired()])
-    gender = StringField('gender')
-    phone_number = IntegerField('phone_number')
-    adress = StringField('adress')
-    birth_year = IntegerField('birth_year')
-    medical_history = TextAreaField('medical_hitory', default='Medically free')
-    submit = SubmitField('submit')
+    name = StringField('Name', validators=[DataRequired()])
+    email = EmailField('E-mail', validators=[DataRequired()])
+    gender = StringField('Gender')
+    phone_number = IntegerField('Phone number')
+    adress = StringField('Adress')
+    birth_year = IntegerField('Birth year')
+    medical_history = TextAreaField('Medical hitory', default='Medically free')
+    submit = SubmitField('Submit')
 
 class ProcedureForm(FlaskForm):
-    operator_name = SelectField('operator name')
-    procedure_type = SelectField('procedure_type', choices=['endo', 'operative'])
-    tooth = StringField('tooth')
-    price = IntegerField('price')
-    description = TextAreaField('description')
+    operator_name = SelectField('Operator name')
+    procedure_type = SelectField('Procedure type', choices=['endo', 'operative'])
+    tooth = StringField('Tooth')
+    price = IntegerField('Price')
+    description = TextAreaField('Description')
     selected_patient_name = HiddenField('selected_patient name')
-    submit = SubmitField('submit')
+    submit = SubmitField('Submit')
 
 class LoginForm(FlaskForm):
     email = EmailField('email', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
     submit = SubmitField('submit')
 
-class DiagnosisForm(FlaskForm):
-    tooth = HiddenField('tooth')
+class DiagnosisFormUL1(FlaskForm):
+    subject = HiddenField('subject')
+    patient_name = HiddenField('patient_name')
+    diagnosis = RadioField('diagnosis')
+
+class DiagnosisFormUL2(FlaskForm):
+    subject = HiddenField('subject')
+    patient_name = HiddenField('patient_name')
+    diagnosis = RadioField('diagnosis')
 
 class NameForm(FlaskForm):
     name = RadioField('n')
@@ -188,9 +196,11 @@ class HiddenNameForm(FlaskForm):
     submit = SubmitField('submit')
 
 
+
 class AppointmentForm(FlaskForm):
-    date = DateField('date')
-    time = TimeField('time')
+    date = DateField('Date')
+    time = TimeField('Time')
+    room = StringField('Room')
     selected_patient_name = HiddenField('selected_patient name')
     submit = SubmitField('submit')
 
@@ -237,16 +247,12 @@ def login():
             flask_login.login_user(user, remember=True)
         else:
             return redirect(url_for('index'))
-        return redirect(url_for('choose_panil'))
+        return redirect(url_for('admin_panil'))
 
     return render_template('login.html', form=form, email=email)
 
 
-@app.route('/choose_panil')
-@flask_login.login_required
-def choose_panil():
 
-    return render_template('choose_panil.html')
 
 
 @app.route('/logout')
@@ -496,8 +502,11 @@ def patient_file():
      patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info, appointment_form=appointment_form)
         '''
 
+
+    today = date.today()
+    all_appointments = Appointments.query.order_by(Appointments.date).order_by(Appointments.time).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date > today ).filter(Appointments.patient_name == selected_patient_name)
     return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name,
-     patient_id=patient_id, hidden_form=hidden_form, operator_info=operator_info)
+     patient_id=patient_id, hidden_form=hidden_form, operator_info=operator_info, all_appointments=all_appointments)
 
     '''
         hidden_form = HiddenNameForm
@@ -587,8 +596,9 @@ def diagnosis():
     if request.method == 'GET':
         patient_name = request.args.get('patient_name')
         #patient_name = request.form["patient_name"]
-    
-    
+    form1 = DiagnosisFormUL1()
+    ##############
+    diagnosis_list = Diagnosis.query.all()
     if request.method == 'POST':
         #diagnosis =  request.form["diagnosis"] 
         diagnosis = request.form['diagnosis']
@@ -596,10 +606,24 @@ def diagnosis():
         patient_name = request.form["patient_name"]
     
         patient_id = db.session.query(Patient.id).filter(Patient.name == patient_name).scalar()
+        
+        diagnosis_save = None
+        diagnosis_list = Diagnosis.query.all()
+        for diagnosis_row in diagnosis_list:
+            if diagnosis_row.diagnosis == diagnosis and diagnosis_row.subject == subject and diagnosis_row.patient_id == patient_id:
+                diagnosis_save = None###########################################################################
+            elif diagnosis_row.subject == subject and diagnosis_row.patient_id == patient_id:
+                diagnosis_save = None
+                diagnosis_row.diagnosis = diagnosis 
+                db.session.commit()
+            else:
+                diagnosis_save = Diagnosis(diagnosis=diagnosis, subject=subject, patient_id=patient_id)
+        
+        if diagnosis_save:
+            db.session.add(diagnosis_save)        
+            db.session.commit()
     
-        diagnosis = Diagnosis(diagnosis=diagnosis, subject=subject, patient_id=patient_id)
-    
-    return render_template('diagnosis.html', patient_name=patient_name)
+    return render_template('diagnosis.html', patient_name=patient_name, diagnosis_list=diagnosis_list)
 
 
 @app.route('/added_procedure', methods = ['GET', 'POST'])
@@ -654,7 +678,12 @@ def added_procedure():
             patient_info = Patient.query.all()
             procedure_info= Procedure.query.all()
             operator_info= Operator.query.all()
-            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info)
+            today = date.today()
+            all_appointments = Appointments.query.order_by(Appointments.date).order_by(Appointments.time).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date > today ).filter(Appointments.patient_name == selected_patient_name)
+
+            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, 
+            patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info, 
+            all_appointments=all_appointments)
 
             #return render_template('added_procedure.html', selected_patient_name=selected_patient_name,  operator_id=operator_id, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id, operator_name=operator_name)
         return render_template('added_procedure.html', selected_patient_name=selected_patient_name, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id)
@@ -689,12 +718,13 @@ def added_appointment():
         if appointment_form.validate_on_submit():
             date = appointment_form.date.data
             time = appointment_form.time.data
+            room = appointment_form.room.data
             selected_patient_name = appointment_form.selected_patient_name.data
             user_id = flask_login.current_user.id
             #patient_id = db.session.query(Patient.id).filter(Patient.name == selected_patient_name).scalar()
         
             #add the data to database
-            appointment = Appointments(date=date, time=time, patient_name=selected_patient_name, user_id=user_id)
+            appointment = Appointments(date=date, time=time, patient_name=selected_patient_name, user_id=user_id, room=room)
             db.session.add(appointment)
             db.session.commit()
 
@@ -703,7 +733,9 @@ def added_appointment():
             patient_info = Patient.query.all()
             procedure_info= Procedure.query.all()
             operator_info= Operator.query.all()
-            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, hidden_form=hidden_form, operator_info=operator_info)
+            today = date.today()
+            all_appointments = Appointments.query.order_by(Appointments.date).order_by(Appointments.time).filter(Appointments.user_id == flask_login.current_user.id).filter(Appointments.date > today ).filter(Appointments.patient_name == selected_patient_name)
+            return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name, hidden_form=hidden_form, operator_info=operator_info, all_appointments=all_appointments)
 
             #return render_template('added_procedure.html', selected_patient_name=selected_patient_name,  operator_id=operator_id, hidden_form=hidden_form, procedure_form=procedure_form, patient_id=patient_id, operator_name=operator_name)
         return render_template('add_appointment.html',appointment_form=appointment_form)

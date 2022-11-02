@@ -1,8 +1,150 @@
-{% extends 'layout.html'%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <title>patient file</title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <style>
+.patient_file_main_container{
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    overflow-y: hidden;
+    height: 90vh;
+    
+}
 
-{% block title %} patient file {% endblock %}
+.patient_file_upper_container{
+    height: 50vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    
+}
 
-{% block body %}
+.patient_file_upper_container_1{
+    margin: 1% 0% 1% 2%;
+    width: 25%;
+    background-color: white;
+    border-radius: 25px;
+    transition: all .4s ease-in-out;
+
+}
+
+.patient_file_upper_container_2{
+    margin: 1%;
+    width: 50%;
+    background-color: white;
+    border-radius: 25px;
+    transition: all .4s ease-in-out;
+
+
+}
+
+.patient_file_upper_container_3{
+    margin: 1% 2% 1% 0%;
+    width: 25%;
+    background-color: white;
+    border-radius: 25px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    transition: all .4s ease-in-out;
+
+}
+
+.patient_file_lower_container{
+    height: 50vh;
+    width: 96vw;
+    background-color: white;
+    border-radius: 25px;
+    margin: 0% 2% 1% 2%;
+    overflow-y: scroll;
+    overflow-x:hidden;
+    transition: all .4s ease-in-out;
+}
+.title_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:center;
+    margin: 0.5% 1% 0% 1%;
+}
+
+
+
+.patient_file_lower_container:hover{
+          
+          
+          /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          transform: scale(1.05);
+          border: solid;
+          border-color: rgb(250,66,112)  rgb(48,107,232);
+        }
+
+        .patient_file_upper_container_1:hover{
+          
+          
+          /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          transform: scale(1.05);
+          border: solid;
+          border-color: rgb(250,66,112)  rgb(48,107,232);
+        }
+
+        .patient_file_upper_container_2:hover{
+          
+          
+          /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          transform: scale(1.05);
+          border: solid;
+          border-color: rgb(250,66,112)  rgb(48,107,232);
+        }
+
+        .patient_file_upper_container_3:hover{
+          
+          
+          /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          transform: scale(1.05);
+          border: solid;
+          border-color: rgb(250,66,112)  rgb(48,107,232);
+        }
+
+
+.patient_file_upper_container_3::-webkit-scrollbar{
+          width: 1vw;
+        }
+
+        .patient_file_upper_container_3::-webkit-scrollbar-thumb{
+          background-color: rgb(48,107,232);
+          border-radius: 25px;
+        }
+        .patient_file_upper_container_3::-webkit-scrollbar-track{
+          background-color: rgba(92, 92, 92, 0.459);
+          border-radius: 25px;
+        }
+
+
+        .patient_file_lower_container::-webkit-scrollbar{
+          width: 1vw;
+        }
+
+        .patient_file_lower_container::-webkit-scrollbar-thumb{
+          background-color: rgb(48,107,232);
+          border-radius: 25px;
+        }
+        .patient_file_lower_container::-webkit-scrollbar-track{
+          background-color: rgba(92, 92, 92, 0.459);
+          border-radius: 25px;
+        }
+    </style>
+</head>
+<body>
 <nav class="index_nav" >
     <div >
       <a class="navbar-brand" href="#">
@@ -10,115 +152,125 @@
       </a>
     </div>
     <div>
-        <button><a href="/admin_panil">admin panil</a></button>
+        <a href="/admin_panil" ><button class="button">admin panil</button></a>
         
     </div>
 </nav>
-<section>
+<div class="patient_file_main_container">
+    <div class="patient_file_upper_container">
+        <div class="patient_file_upper_container_1">
+            <h4>personal information</h1>
+            {% for patient in patient_info %}
+                {% if patient['name'] == selected_patient_name:%}
+                
+                    Id:              {{ patient['id'] }} <br>
+                    Name:            {{ patient['name'].strip('0123456789') }} <br>
+                    Gender:          {{ patient['gender'] }} <br>
+                    Birth year:      {{ patient['birth_year'] }} <br>
+                    Adress:          {{ patient['adress'] }} <br>
+                    Phone number:    {{ patient['phone_number'] }} <br>
+                    Email:           {{ patient['email'] }} <br>
+                    Medical history: {{ patient['medical_history'] }}
 
-<h1>patient personal information</h1>
+                {% endif %}
+            
+            {% endfor %}
+            
+        </div>
 
-<table class="table table-striped">
-    <tr>
-      <th>id</th>
-      <th>patient name</th>
-      <th>gender</th>
-      <th>birth year</th>
-      <th>adress</th>
-      <th>phonr number</th>
-      <th>email</th>
-      <th>medical_history</th>
+        <div class="patient_file_upper_container_2">
+            <div class="title_container">
+                <h4>Diagnosis</h4>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="submit" value="+ Diagnosis" class='button_blue'>
+                </form>
+            </div>
 
+        </div>
 
-    </tr>
-    {% for patient in patient_info %}
-        {% if patient['name'] == selected_patient_name:%}
-            <tr>
-            <td>{{ patient['id'] }}</td>
-            <td>{{ patient['name'].strip('0123456789') }}</td>
-            <td>{{ patient['gender'] }}</td>
-            <td>{{ patient['birth_year'] }}</td>
-            <td>{{ patient['adress'] }}</td>
-            <td>{{ patient['phone_number'] }}</td>
-            <td>{{ patient['email'] }}</td>
-            <td>{{ patient['medical_history'] }}</td>
+        <div class="patient_file_upper_container_3">
+            <div class="title_container">
+                <h4>Visits</h4>
+                <form action={{url_for('add_appointment')}} method="post" id="add_appointment">
+                    {{hidden_form.hidden_tag()}}
+                    {{hidden_form.selected_patient_name}}
+                    
+                    {{hidden_form.submit(form='add_appointment', value='+ Visits', class='button_blue')}}
+                </form>
+            </div>
+            <div class="patinet_file_appointments">
+                <table class="table table-hover">
+                    <tr>
+                      <th>date</th>
+                      <th>time</th>
+                    </tr>
+                {% for appointment in all_appointments : %}
 
-        {% endif %}
-        </tr>
-    {% endfor %}
-  </table>
-
-
-</section>
-
-<form name= 'name_form'action="/diagnosis" method="get">
-    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
-    <input type="submit" value="add diagnosis">
-</form>
-
-<section>
-    <h1>TODO procedures</h1>
-    <table class="table table-striped">
-        <tr>
-          <th>id</th>
-          <th>patient id</th>
-          <th>operator</th>
-          <th>procedure type</th>
-          <th>tooth</th>
-          <th>procedure date</th>
-          <th>price</th>
-          <th>description</th>
-    
-        </tr>
-        {% for procedure in procedure_info %}
-            {% if procedure['patient_name'] == selected_patient_name:%}
                 <tr>
-                <td>{{ procedure['id'] }}</td>
-                <td>{{ procedure['patient_name'].strip('0123456789') }}</td>
+                    <td>{{ appointment['date'] }}</td>
+                    <td>{{ appointment['time'] }}</td>
+    
+                </tr>
+                
 
-                {% for operator in operator_info: %}
-                    {% if operator['id'] == procedure['operator_id']:%}
-                <td>{{ operator['name'] }}</td>
-                    {% endif %}
                 {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
 
-                <td>{{ procedure['procedure_type'] }}</td>
-                <td>{{ procedure['tooth'] }}</td>
-                <td>{{ procedure['procedure_date'] }}</td>
-                <td>{{ procedure['price'] }}</td>
-                <td>{{ procedure['description'] }}</td>
-
-            {% endif %}
-            </tr>
-        {% endfor %}
-      </table>
-
-</section>
-
-<section>
-<!--if procedure
-        procedure added succesfully <btn>add new procedure</btn>(direct to the same page)
-    else
-        procedure form-->
-    <h1>add new procedure</h1>
-
-    
-    
-    
-    
-    <!--a href="/added_procedure"><button>add new procedure</button></a-->
-    <form action="/added_procedure" method="post">
-        {{hidden_form.hidden_tag()}}
-        {{hidden_form.selected_patient_name}}
-        <input type="submit" value="add procedure">
-    </form>
-    <form action={{url_for('add_appointment')}} method="post" id="add_appointment">
-        {{hidden_form.hidden_tag()}}
-        {{hidden_form.selected_patient_name}}
+    <div class="patient_file_lower_container">
+        <div class="title_container">
+            <h4>Procedures</h4>
+            <form action="/added_procedure" method="post">
+                {{hidden_form.hidden_tag()}}
+                {{hidden_form.selected_patient_name}}
+                <input type="submit" value="+ Procedure" class='button_blue'>
+            </form>
+        </div>
+        <table class="table table-striped">
+            <tr>
+            <th>id</th>
+            <th>operator</th>
+            <th>procedure type</th>
+            <th>tooth</th>
+            <th>procedure date</th>
+            <th>price</th>
+            <th>description</th>
         
-        {{hidden_form.submit(form='add_appointment', value='add appointment')}}
-    </form>
+            </tr>
+            {% for procedure in procedure_info %}
+                {% if procedure['patient_name'] == selected_patient_name:%}
+                    <tr>
+                    <td>{{ procedure['id'] }}</td>
+                    
+
+                    {% for operator in operator_info: %}
+                        {% if operator['id'] == procedure['operator_id']:%}
+                    <td>{{ operator['name'] }}</td>
+                        {% endif %}
+                    {% endfor %}
+
+                    <td>{{ procedure['procedure_type'] }}</td>
+                    <td>{{ procedure['tooth'] }}</td>
+                    <td>{{ procedure['procedure_date'] }}</td>
+                    <td>{{ procedure['price'] }}</td>
+                    <td>{{ procedure['description'] }}</td>
+
+                {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
     
-</section>
-<img src="/static/UL1_sound_removebg.png" alt="" style="height: 200; width:auto;">
-{% endblock %}
+
+    
+
+   
+
+    
+<!--img src="/static/UL1_sound_removebg.png" alt="" style="height: 200; width:auto;"-->
+</div>
+</body>
+</html>

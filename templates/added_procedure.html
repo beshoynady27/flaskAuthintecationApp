@@ -1,44 +1,134 @@
-{% extends 'layout.html' %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
 
-{% block body %}
-    <h1>procedure added succsesfully </h1>
-    <a href="/admin_panil"><button>Admin panil</button></a>
+    <style>
+        body{
+            height: 90vh;
+            width: 100vw;
+        }
+        .procedure_form{
+            margin: 0% 10% 0% 10%;
+            padding: 1% 5% 1% 5%;
+            border-radius: 25px;
+            transition: all .4s ease-in-out;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            
+        }
 
-    <br>
+        .procedure_form:hover{
+            margin: 0% 10% 0% 10%;
+            padding: 1% 5% 1% 5%;
+            border-radius: 25px;
+            background-image: url('/static/website_hover_backgrownd.png');
+            background-repeat: no-repeat;
+            background-size:cover;
+            color: white;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          transform: scale(1.05);
+        }
+        .form_procedure{
+            display: flex;
+            flex-direction: column;
+        }
+        .form_element{
+            height: 50;
+            width: 70%;
+            border-radius: 20px;
+        }
 
+        .form_label{
+            font-size: 22;
+        }
+
+        .button_blue{
+            background-color: rgb(48,107,232);
+            width: 100%;
+            height: 50;
+            margin-top: 2%;
+            margin-bottom: 0%;
+            border-radius: 25px;
+            border: none;
+            color: white;
+            font-size: 20;
+        }
+
+        .form_unit{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0.5%;
+        }
+
+        .title{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 3%;
+        }
+    </style>
+</head>
+<body>
     
 
-    <form  action="/added_procedure" method="post">
-        {{procedure_form.hidden_tag()}}
+    <nav class="index_nav" >
+        <div >
+          <a class="navbar-brand" href="#">
+            <img src="/static/dental_manager_logo-removebg-preview.png" alt="" width="300" height=auto>
+          </a>
+        </div>
+        <div>
+            <a href="/admin_panil" ><button class="button">Admin panil</button></a>
+            
+        </div>
+    </nav>
+    <div class="title">
+        <h2>Add procedure for <b> {{selected_patient_name.strip('1234567890')}}</b></h2>
+    </div>
+    <div class="procedure_form">
 
-        {{procedure_form.operator_name.label}}
-        {{procedure_form.operator_name}}
+        <form  action="/added_procedure" method="post" class="form_procedure">
+            {{procedure_form.hidden_tag()}}
+            <div class="form_unit">
+            {{procedure_form.operator_name.label(class='form_label')}}
+            {{procedure_form.operator_name(class='form_element')}}
+            </div>
 
-        {{procedure_form.procedure_type.label}}
-        {{procedure_form.procedure_type}}
+            <div class="form_unit">
+            {{procedure_form.procedure_type.label(class='form_label')}}
+            {{procedure_form.procedure_type(class='form_element')}}
+            </div>
 
-        {{procedure_form.tooth.label}}
-        {{procedure_form.tooth}}
+            <div class="form_unit">
+            {{procedure_form.tooth.label(class='form_label')}}
+            {{procedure_form.tooth(class='form_element')}}
+            </div>
 
-        {{procedure_form.price.label}}
-        {{procedure_form.price}}
+            <div class="form_unit">
+            {{procedure_form.price.label(class='form_label')}}
+            {{procedure_form.price(class='form_element')}}
+            </div>
 
-        {{procedure_form.description.label}}
-        {{procedure_form.description}}
+            <div class="form_unit">
+            {{procedure_form.description.label(class='form_label')}}
+            {{procedure_form.description(class='form_element')}}
+            </div>
 
-        {{procedure_form.selected_patient_name}}
+            {{procedure_form.selected_patient_name}}
 
-        <!--{{procedure_form.patient_name}}-->
+            <!--{{procedure_form.patient_name}}-->
 
-        {{procedure_form.submit}}
+            {{procedure_form.submit(class='button_blue')}}
 
-    </form>
-   selected patient:    
-{{selected_patient_name}}
-
-<br>
-patient id: {{patient_id}}
-<br>
-operator: {{operator_name}}
-
-{% endblock %}
+        </form>
+    </div>
+</body>
+</html>
