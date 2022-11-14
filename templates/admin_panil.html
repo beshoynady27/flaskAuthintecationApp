@@ -1,356 +1,387 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--bootstrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-    <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Tangerine"
+    />
     <title></title>
-    <link rel="stylesheet" href="/static/style.css">
-    
+    <link rel="stylesheet" href="/static/style.css" />
+
     <style>
-        body{
-          font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-          overflow-x: hidden;
-          overflow-y: hidden;
+      body {
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+        overflow-x: hidden;
+        overflow-y: hidden;
+      }
+      .admin_appointments::-webkit-scrollbar {
+        width: 1vw;
+      }
 
-        }
-        .admin_appointments::-webkit-scrollbar{
-          width: 1vw;
-        }
+      .admin_appointments::-webkit-scrollbar-thumb {
+        background-color: rgb(48, 107, 232);
+        border-radius: 25px;
+      }
+      .admin_appointments::-webkit-scrollbar-track {
+        background-color: rgba(92, 92, 92, 0.459);
+        border-radius: 25px;
+      }
 
-        .admin_appointments::-webkit-scrollbar-thumb{
-          background-color: rgb(48,107,232);
-          border-radius: 25px;
-        }
-        .admin_appointments::-webkit-scrollbar-track{
-          background-color:rgba(92, 92, 92, 0.459);
-          border-radius: 25px;
-        }
+      .admin_page_patients::-webkit-scrollbar {
+        width: 1vw;
+      }
 
-        .admin_page_patients::-webkit-scrollbar{
-          width: 1vw;
-        }
+      .admin_page_patients::-webkit-scrollbar-thumb {
+        background-color: rgb(48, 107, 232);
+        border-radius: 25px;
+      }
+      .admin_page_patients::-webkit-scrollbar-track {
+        background-color: rgba(92, 92, 92, 0.459);
+        border-radius: 25px;
+      }
+      .admin_appointments::-webkit-scrollbar-button {
+        display: block;
+      }
 
-        .admin_page_patients::-webkit-scrollbar-thumb{
-          background-color: rgb(48,107,232);
-          border-radius: 25px;
-        }
-        .admin_page_patients::-webkit-scrollbar-track{
-          background-color: rgba(92, 92, 92, 0.459);
-          border-radius: 25px;
-        }
-        .admin_appointments::-webkit-scrollbar-button{
-          display: block;
-        }
+      .nav_buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 25vw;
+      }
 
-        .nav_buttons{
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          width: 25vw;
-        }
+      #add_patient_button {
+        flex-basis: 40%;
+      }
 
-        #add_patient_button{
-         
-          flex-basis: 40%;
-        }
+      #add_operator_button {
+        flex-basis: 40%;
+      }
 
-        #add_operator_button{
-          
-          flex-basis: 40%;
-        }
+      .admin_main_container {
+        height: 90;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+      }
 
-        .admin_main_container{
-            height: 90;
-            width: 100%;
-            display: flex;
-            flex-direction: row;
+      .admin_appointments {
+        flex-basis: 33.33%;
+        background-color: white;
+        height: 86vh;
+        border-radius: 5%;
+        margin: 1%;
+        padding: 2%;
+        overflow-y: scroll;
+        scrollbar-color: #0202ff #e40000;
+        scrollbar-width: thin;
+        transition: all 0.4s ease-in-out;
+      }
 
-        }
+      .admin_page {
+        flex-basis: 66.66%;
 
-        .admin_appointments{
-            flex-basis: 33.33%;
-            background-color:  white;
-            height: 86vh;
-            border-radius: 5%;
-            margin: 1%;
-            padding: 2%;
-            overflow-y: scroll;
-            scrollbar-color: #0202ff #e40000;
-            scrollbar-width: thin;
-            transition: all .4s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        height: 90vh;
+      }
 
+      .admin_page_patients {
+        height: 50vh;
+        background-color: white;
+        margin: 1%;
+        border-radius: 25px;
+        padding: 2%;
+        overflow-y: scroll;
+        transition: all 0.4s ease-in-out;
+      }
 
-        }
-        
-        .admin_page{
-            flex-basis: 66.66%;
-            
-            display: flex;
-            flex-direction: column;
-            height: 90vh;
-        }
+      .patient_list {
+        overflow-y: scroll;
+      }
 
-        .admin_page_patients{
-            height: 50vh;
-            background-color: white;
-            margin: 1%;
-            border-radius: 25px;
-            padding: 2%;
-            overflow-y: scroll;
-            transition: all .4s ease-in-out;
+      .admin_page_2 {
+        height: 50vh;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+      }
 
+      .admin_page_2_financials {
+        width: 50%;
+        background-color: white;
+        margin: 1%;
+        border-radius: 5%;
+        padding: 2%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.4s ease-in-out;
+      }
 
-        }
+      .admin_page_2_financials:hover {
+        background-image: url("/static/dollar_backgrownd.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white;
+        /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        transform: scale(1.05);
+      }
 
-        .patient_list {
-          overflow-y: scroll;
-        }
+      .admin_page_2_analytics:hover {
+        background-image: url("/static/analysis_backgrownd.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white;
+        /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        transform: scale(1.05);
+      }
 
-        .admin_page_2{
-            height: 50vh;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-        }
+      .admin_appointments:hover {
+        background-image: url("/static/appointment_backgrownd.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white;
+        /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        transform: scale(1.03);
+      }
 
-        .admin_page_2_financials{
-            width: 50%;
-            background-color: white;
-            margin: 1%;
-            border-radius: 5%;
-            padding: 2%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all .4s ease-in-out;
-        }
+      .admin_page_patients:hover {
+        background-image: url("/static/patient_backgrownd_final.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white;
+        /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        transform: scale(1.03);
+        table-layout: fixed;
+      }
+      .admin_appointments:hover table {
+        color: inherit;
+      }
 
-        .admin_page_2_financials:hover{
-          background-image: url('/static/dollar_backgrownd.png');
-          background-repeat: no-repeat;
-          background-size:cover;
-          color: white;
-          /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
-          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-          transform: scale(1.05);
-        }
+      .admin_page_2_analytics {
+        width: 50%;
+        background-color: white;
+        margin: 1%;
+        border-radius: 5%;
+        padding: 2%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.4s ease-in-out;
+      }
 
-        .admin_page_2_analytics:hover{
-          background-image: url('/static/analysis_backgrownd.png');
-          background-repeat: no-repeat;
-          background-size:cover;
-          color: white;
-          /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
-          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-          transform: scale(1.05);
-        }
+      .button {
+        background-color: rgb(250, 66, 112);
+        width: 100%;
+        height: 50;
+        margin-top: 2%;
+        margin-bottom: 5%;
+        border-radius: 25px;
+        border: none;
+        color: white;
+        font-size: 20;
+      }
 
-        .admin_appointments:hover{
-          background-image: url('/static/appointment_backgrownd.png');
-          background-repeat: no-repeat;
-          background-size:cover;
-          color: white;
-          /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
-          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-          transform: scale(1.03);
-        }
+      .button_blue {
+        background-color: rgb(48, 107, 232);
+        width: 100%;
+        height: 50;
+        margin-top: 2%;
+        margin-bottom: 5%;
+        border-radius: 25px;
+        border: none;
+        color: white;
+        font-size: 20;
+      }
+      .form_search_submit {
+        display: flex;
+        flex-direction: row;
+        height: 10vh;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #admin_form_submit {
+        flex-basis: 33%;
+      }
 
-        .admin_page_patients:hover{
-          background-image: url('/static/patient_backgrownd_final.png');
-          background-repeat: no-repeat;
-          background-size:cover;
-          color: white;
-          /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
-          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-          transform: scale(1.03);
-          table-layout: fixed;
-        }
-        .admin_appointments:hover table{
-          color: inherit;
-        }
+      /* (A) SEARCH BOX */
+      #the-filter {
+        box-sizing: border-box;
+        width: 100%;
+        flex-basis: 66%;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 25px;
+      }
 
-        .admin_page_2_analytics{
-            width: 50%;
-            background-color: white;
-            margin: 1%;
-            border-radius: 5%;
-            padding: 2%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all .4s ease-in-out;
+      /* (B) LIST */
+      #the-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      #the-list li {
+        padding: 10px;
+        border-bottom: 2px solid #ffe9e9;
+      }
 
-        }
-
-        .button{
-    background-color:rgb(250,66,112);
-    width: 100%;
-    height: 50;
-    margin-top: 2%;
-    margin-bottom: 5%;
-    border-radius: 25px;
-    border: none;
-    color: white;
-    font-size: 20;
-}
-
-        .button_blue{
-            background-color: rgb(48,107,232);
-            width: 100%;
-            height: 50;
-            margin-top: 2%;
-            margin-bottom: 5%;
-            border-radius: 25px;
-            border: none;
-            color: white;
-            font-size: 20;
-        }
-        .form_search_submit{
-          display: flex;
-          flex-direction: row;
-          height: 10vh;
-          justify-content: space-between;
-          align-items: center;
-        }
-        #admin_form_submit{
-          flex-basis: 33%;
-        }
-        
-
-    /* (A) SEARCH BOX */
-    #the-filter {
-  box-sizing: border-box;
-  width: 100%;
-  flex-basis: 66%;
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 25px;
-}
- 
-/* (B) LIST */
-#the-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  
-}
-#the-list li {
-  padding: 10px;
-  border-bottom: 2px solid #ffe9e9;
-}
-
-#the-list li.hide { display: none; }
+      #the-list li.hide {
+        display: none;
+      }
     </style>
-</head>
-<body>
-
-    <nav class="index_nav" >
-        <div >
-          <a class="navbar-brand" href="#">
-            <img src="/static/dental_manager_logo-removebg-preview.png" alt="" width="300" height=auto>
-          </a>
-        </div>
-        <div class="nav_buttons">
-            <a href="/add_new_patient"><button class="button_blue" id="add_patient_button">Add new patient</button></a>
-            <a href="/add_new_patient"><button class="button_blue" id="add_operator_button">Add new operator</button></a>
-
-            
-        </div>
+  </head>
+  <body>
+    <nav class="index_nav">
+      <div>
+        <a class="navbar-brand" href="#">
+          <img
+            src="/static/dental_manager_logo-removebg-preview.png"
+            alt=""
+            width="300"
+            height="auto"
+          />
+        </a>
+      </div>
+      <div class="nav_buttons">
+        <a href="/add_new_patient"
+          ><button class="button_blue" id="add_patient_button">
+            Add new patient
+          </button></a
+        >
+        <a href="/add_operator"
+          ><button class="button_blue" id="add_operator_button">
+            Add new operator
+          </button></a
+        >
+        <a href="/logout"
+          ><button class="button_blue" id="add_operator_button">
+            Loguot
+          </button></a
+        >
+      </div>
     </nav>
-    
+
     <div class="admin_main_container">
-        <div class="admin_appointments">
-            <h3>Today's appointments</h3>
+      <div class="admin_appointments">
+        <h3>Today's appointments</h3>
         <table class="table table-hover">
-            <tr>
-              <th>Patient</th>
-              <th>Date</th>
-              <th>Time</th>
-            </tr>
-            {% for appointment in today_appointments %}
-                
-                    <tr>
-                    <td>{{ appointment['patient_name'].strip('0123456789') }}</td>
-                    <td>{{ appointment['date'] }}</td>
-                    <td>{{ appointment['time'] }}</td>
-                    
-                    
-    
-                
-                </tr>
-            {% endfor %}
-          </table>
-          <h3>All appointments</h3>
-          <table class="table table-hover">
-            <tr>
-              <th>patient</th>
-              <th>date</th>
-              <th>time</th>
-            </tr>
-            {% for appointment in all_appointments %}
-                
-                    <tr>
-                    <td>{{ appointment['patient_name'].strip('0123456789') }}</td>
-                    <td>{{ appointment['date'] }}</td>
-                    <td>{{ appointment['time'] }}</td>
-                    
-                    
-    
-                
-                </tr>
-            {% endfor %}
-          </table>
-        </div>
-        <div class="admin_page">
-            <div class="admin_page_patients">
-                <h3>Patient list</h3>
-                <!--form action="/patient_file" method="post">
+          <tr>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Room</th>
+          </tr>
+          {% for appointment in today_appointments %}
+
+          <tr>
+            <td>{{ appointment['patient_name'].strip('0123456789') }}</td>
+            <td>{{ appointment['date'] }}</td>
+            <td>{{ appointment['time'] }}</td>
+            <td>{{ appointment['room'] }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <h3>All appointments</h3>
+        <table class="table table-hover">
+          <tr>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Room</th>
+          </tr>
+          {% for appointment in all_appointments %}
+
+          <tr>
+            <td>{{ appointment['patient_name'].strip('0123456789') }}</td>
+            <td>{{ appointment['date'] }}</td>
+            <td>{{ appointment['time'] }}</td>
+            <td>{{ appointment['room'] }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="admin_page">
+        <div class="admin_page_patients">
+          <h3>Patient list</h3>
+          <!--form action="/patient_file" method="post">
             
                     {{form.hidden_tag()}}
                     {{form.name}}
                         
                     <button class="btn btn-outline-primary" type="submit" value="submit">go to patient file</button>
                 </form-->
-                <form action="/patient_file" method="post">
-                <div class="form_search_submit">
-                  <input type="text" id="the-filter" onkeyup="myFunction()" placeholder="Search for names..">
-                  <input type="submit" value="go to patient file" class="button" id="admin_form_submit">
-                </div>
-                <div class="patien_list">
-                {% for patient in patient_list%}
-                    
-                    <ul id="the-list">
-                        <label for="name"></label><li><input type="radio" name="name" id="" value="{{patient}}"> {{patient.strip('1234567890')}}</li></label>
-                    </ul>
-                {% endfor %}
-                </div>
-              </form>
+          <form action="/patient_file" method="post">
+            <div class="form_search_submit">
+              <input
+                type="text"
+                id="the-filter"
+                onkeyup="myFunction()"
+                placeholder="Search for names.."
+              />
+              <input
+                type="submit"
+                value="go to patient file"
+                class="button"
+                id="admin_form_submit"
+              />
             </div>
-            
-            
-            <div class="admin_page_2">
-                <div class="admin_page_2_financials">
-                    <h2><b>Financials</b></h2>
-                    <h4>Total income this year:{{total_income}}</h4>
-                    <h4>Total income this month: {{last_month_income}}</h4>
-                    <a href="/financials"><button class="button">financials</button></a>
-                </div>
-                <div class="admin_page_2_analytics">
-                    <h2><b>Analytics</b></h2>
-                    <a href="/clinic_analytics"><button class="button_blue"> clinic analytics</button></a>
-                    <form action="" method="post">
-                        <select name="" id="" class="button_blue" style="background-color: white; color:black">
-                            <option value="">beshoy nady wadee</option>
-                        </select>
-                        <input type="submit" value="operator analytics" class="button">
-                    </form>
-                </div>
+            <div class="patien_list">
+              {% for patient in patient_list%}
+
+              <ul id="the-list">
+                <label for="name"
+                  ><li>
+                    <input type="radio" name="name" id="" value="{{patient}}" />
+                    {{patient.strip('1234567890')}}
+                  </li></label
+                >
+              </ul>
+              {% endfor %}
             </div>
+          </form>
         </div>
+
+        <div class="admin_page_2">
+          <div class="admin_page_2_financials">
+            <h2><b>Financials</b></h2>
+            <h4>Total income this year:{{total_income}}</h4>
+            <h4>Total income this month: {{last_month_income}}</h4>
+            <a href="/financials"><button class="button">financials</button></a>
+          </div>
+          <div class="admin_page_2_analytics">
+            <h2><b>Analytics</b></h2>
+            <a href="/clinic_analytics"
+              ><button class="button_blue">Clinic analytics</button></a
+            >
+            <form action="" method="post">
+              <select
+                name=""
+                id=""
+                class="button_blue"
+                style="background-color: white; color: black"
+              >
+                <option value="">beshoy nady wadee</option>
+              </select>
+              <input type="submit" value="operator analytics" class="button" />
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
     <!--section>
         <h3>today's appointments</h3>
@@ -389,8 +420,6 @@
     <!--{% if current_user.is_authenticated %}
     Hi {{ current_user.name }}! <a href="/logout">logout</a>
     {% endif %}-->
-        
-    
 
     <!--section >
         <h1>financial </h1>
@@ -450,28 +479,28 @@
   <li><a href="#">Cindy</a></li>
 </ul-->
 
-<script>
+    <script>
+      window.addEventListener("load", () => {
+        // (A) GET HTML ELEMENTS
+        var filter = document.getElementById("the-filter"), // search box
+          list = document.querySelectorAll("#the-list li"); // all list items
 
-window.addEventListener("load", () => {
-  // (A) GET HTML ELEMENTS
-  var filter = document.getElementById("the-filter"), // search box
-      list = document.querySelectorAll("#the-list li"); // all list items
- 
-  // (B) ATTACH KEY UP LISTENER TO SEARCH BOX
-  filter.onkeyup = () => {
-    // (B1) GET CURRENT SEARCH TERM
-    let search = filter.value.toLowerCase();
- 
-    // (B2) LOOP THROUGH LIST ITEMS - ONLY SHOW THOSE THAT MATCH SEARCH
-    for (let i of list) {
-      let item = i.innerHTML.toLowerCase();
-      if (item.indexOf(search) == -1) { i.classList.add("hide"); }
-      else { i.classList.remove("hide"); }
-    }
-  };
-});
-</script>
-</body>
+        // (B) ATTACH KEY UP LISTENER TO SEARCH BOX
+        filter.onkeyup = () => {
+          // (B1) GET CURRENT SEARCH TERM
+          let search = filter.value.toLowerCase();
+
+          // (B2) LOOP THROUGH LIST ITEMS - ONLY SHOW THOSE THAT MATCH SEARCH
+          for (let i of list) {
+            let item = i.innerHTML.toLowerCase();
+            if (item.indexOf(search) == -1) {
+              i.classList.add("hide");
+            } else {
+              i.classList.remove("hide");
+            }
+          }
+        };
+      });
+    </script>
+  </body>
 </html>
-
-

@@ -1,139 +1,145 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--bootstrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
     <title>landing page</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css" />
 
     <style>
-        body{
-            height: 90vh;
-            width: 100vw;
-        }
-        .add_patient_form{
-            margin: 0% 10% 0% 10%;
-            padding: 1% 5% 1% 5%;
-            border-radius: 25px;
-            transition: all .4s ease-in-out;
-            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-            
-        }
+      body {
+        height: 90vh;
+        width: 100vw;
+      }
+      .add_patient_form {
+        margin: 0% 10% 0% 10%;
+        padding: 1% 5% 1% 5%;
+        border-radius: 25px;
+        transition: all 0.4s ease-in-out;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      }
 
-        .add_patient_form:hover{
-            margin: 0% 10% 0% 10%;
-            padding: 1% 5% 1% 5%;
-            border-radius: 25px;
-            background-image: url('/static/website_hover_backgrownd.png');
-            background-repeat: no-repeat;
-            background-size:cover;
-            color: white;
-            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-          transform: scale(1.05);
-        }
-        .form_add_patient{
-            display: flex;
-            flex-direction: column;
-        }
-        .form_element{
-            height: 50;
-            width: 70%;
-            border-radius: 20px;
-        }
+      .add_patient_form:hover {
+        margin: 0% 10% 0% 10%;
+        padding: 1% 5% 1% 5%;
+        border-radius: 25px;
+        background-image: url("/static/website_hover_backgrownd.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        transform: scale(1.05);
+      }
+      .form_add_patient {
+        display: flex;
+        flex-direction: column;
+      }
+      .form_element {
+        height: 50;
+        width: 70%;
+        border-radius: 20px;
+      }
 
-        .form_label{
-            font-size: 22;
-        }
+      .form_label {
+        font-size: 22;
+      }
 
-        .button_blue{
-            background-color: rgb(48,107,232);
-            width: 100%;
-            height: 50;
-            margin-top: 2%;
-            margin-bottom: 0%;
-            border-radius: 25px;
-            border: none;
-            color: white;
-            font-size: 20;
-        }
+      .button_blue {
+        background-color: rgb(48, 107, 232);
+        width: 100%;
+        height: 50;
+        margin-top: 2%;
+        margin-bottom: 0%;
+        border-radius: 25px;
+        border: none;
+        color: white;
+        font-size: 20;
+      }
 
-        .form_unit{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            margin: 0.5%;
-        }
+      .form_unit {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0.5%;
+      }
 
-        .title{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin-bottom: 3%;
-        }
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 3%;
+      }
     </style>
-</head>
-<body>
-    <nav class="index_nav" >
-        <div >
-          <a class="navbar-brand" href="#">
-            <img src="/static/dental_manager_logo-removebg-preview.png" alt="" width="300" height=auto>
-          </a>
-        </div>
-        <div>
-            <a href="/admin_panil" ><button class="button">Admin panil</button></a>
-            
-        </div>
+  </head>
+  <body>
+    <nav class="index_nav">
+      <div>
+        <a class="navbar-brand" href="#">
+          <img
+            src="/static/dental_manager_logo-removebg-preview.png"
+            alt=""
+            width="300"
+            height="auto"
+          />
+        </a>
+      </div>
+      <div>
+        <a href="/admin_panil"><button class="button">Admin panil</button></a>
+      </div>
     </nav>
 
     <div class="title">
-        <h2>Add new patient</b></h2>
+      <h2>Add new patient</h2>
     </div>
     <div class="add_patient_form">
-    <form  method="post" class="form_add_patient">
+      <form method="post" class="form_add_patient">
         {{form.hidden_tag()}}
         <div class="form_unit">
-        {{form.name.label(class="form_label")}}
-        {{form.name(class="form_element")}}
+          {{form.name.label(class="form_label")}}
+          {{form.name(class="form_element")}}
         </div>
 
         <div class="form_unit">
-        {{form.email.label(class="form_label")}}
-        {{form.email(class="form_element")}}
-        </div>
-        
-        <div class="form_unit">
-        {{form.gender.label(class="form_label")}}
-        {{form.gender(class="form_element")}}
+          {{form.email.label(class="form_label")}}
+          {{form.email(class="form_element")}}
         </div>
 
         <div class="form_unit">
-        {{form.phone_number.label(class="form_label")}}
-        {{form.phone_number(class="form_element")}}
+          {{form.gender.label(class="form_label")}}
+          {{form.gender(class="form_element")}}
         </div>
 
         <div class="form_unit">
-        {{form.adress.label(class="form_label")}}
-        {{form.adress(class="form_element")}} 
+          {{form.phone_number.label(class="form_label")}}
+          {{form.phone_number(class="form_element")}}
         </div>
 
         <div class="form_unit">
-        {{form.birth_year.label(class="form_label")}}
-        {{form.birth_year(class="form_element")}}
+          {{form.adress.label(class="form_label")}}
+          {{form.adress(class="form_element")}}
         </div>
 
         <div class="form_unit">
-        {{form.medical_history.label(class="form_label")}}
-        {{form.medical_history(class="form_element")}}
+          {{form.birth_year.label(class="form_label")}}
+          {{form.birth_year(class="form_element")}}
+        </div>
+
+        <div class="form_unit">
+          {{form.medical_history.label(class="form_label")}}
+          {{form.medical_history(class="form_element")}}
         </div>
 
         {{form.submit(class='button_blue')}}
-       
-
-    </form>
+      </form>
     </div>
-</body>
+  </body>
 </html>

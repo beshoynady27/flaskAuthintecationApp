@@ -1,55 +1,47 @@
-{% extends 'layout.html' %}
+{% extends 'layout.html' %} {% block body %} {{patient_name}} (image for UL1)
+<form name="diagnosis_form" method="post">
+  <input type="hidden" name="subject" value="UL1" />
+  <input type="hidden" name="patient_name" value="{{patient_name}}" />
+  missed
+  <input type="radio" name="diagnosis" id="" value="exist" checked />exist
+  <input type="radio" name="diagnosis" id="" value="missed" />missed
+  <input type="radio" name="diagnosis" id="" value="filled" />filled
+  <input type="radio" name="diagnosis" id="" value="decaied" />decaied
+  <input type="radio" name="diagnosis" id="" value="rct" />root canal treated
+  <input type="radio" name="diagnosis" id="" value="implant" />implant
+  <input type="radio" name="diagnosis" id="" value="crown" />crown
+  <input type="submit" value="submit" />
+</form>
 
-{% block body %}
-{{patient_name}}
-    (image for UL1)
-    <form name="diagnosis_form" method="post">
-        <input type="hidden" name="subject" value="UL1">
-        <input type="hidden" name="patient_name" value="{{patient_name}}">
-        missed 
-        <input type="radio" name="diagnosis" id="" value='exist' checked>exist
-        <input type="radio" name="diagnosis" id="" value='missed'>missed
-        <input type="radio" name="diagnosis" id="" value='filled'>filled
-        <input type="radio" name="diagnosis" id="" value='decaied'>decaied
-        <input type="radio" name="diagnosis" id="" value='rct'>root canal treated
-        <input type="radio" name="diagnosis" id="" value='implant'>implant
-        <input type="radio" name="diagnosis" id="" value='crown'>crown
-        <input type="submit" value="submit">
-    </form>    
+<br />
+(image for UL2)
+<form name="diagnosis_form2" method="post">
+  <input type="hidden" name="subject" value="UL2" />
+  <input type="hidden" name="patient_name" value="{{patient_name}}" />
+  missed
+  <input type="radio" name="diagnosis" id="" value="exist" checked />exist
+  <input type="radio" name="diagnosis" id="" value="missed" />missed
+  <input type="radio" name="diagnosis" id="" value="filled" />filled
+  <input type="radio" name="diagnosis" id="" value="decaied" />decaied
+  <input type="radio" name="diagnosis" id="" value="rct" />root canal treated
+  <input type="radio" name="diagnosis" id="" value="implant" />implant
+  <input type="radio" name="diagnosis" id="" value="crown" />crown
+  <input type="submit" value="submit" />
+</form>
 
-    <br>
-    (image for UL2)
-    <form name="diagnosis_form2" method="post">
-        <input type="hidden" name="subject" value="UL2">
-        <input type="hidden" name="patient_name" value="{{patient_name}}">
-        missed 
-        <input type="radio" name="diagnosis" id="" value='exist' checked>exist
-        <input type="radio" name="diagnosis" id="" value='missed'>missed
-        <input type="radio" name="diagnosis" id="" value='filled'>filled
-        <input type="radio" name="diagnosis" id="" value='decaied'>decaied
-        <input type="radio" name="diagnosis" id="" value='rct'>root canal treated
-        <input type="radio" name="diagnosis" id="" value='implant'>implant
-        <input type="radio" name="diagnosis" id="" value='crown'>crown
-        <input type="submit" value="submit">
-    </form>  
+TODO the rest of the teeth
+<br />
 
-    TODO the rest of the teeth
-    <br>
-
-    <form  method="post">
-        <input type="hidden" name="patient_name" value="{{patient_name}}">
-        <label for="subject">diagnosis for:</label>
-        <input type="text" name="subject" placeholder="EX: soft tissue">
-        <br>
-        <label for="diagnosis"> diagnisis</label>
-        <input type="text" name="diagnosis" placeholder="EX: periodontitis">
-        <br>
-        <input type="submit" value="submit">
-
-
-    </form>
-{{diagnosis_list}}
-{% for diagnosis_row in diagnosis_list: %}
-   {{diagnosis_row['subject']}} : {{diagnosis_row['diagnosis']}} <br>
-{% endfor %}
-{% endblock %}
+<form method="post">
+  <input type="hidden" name="patient_name" value="{{patient_name}}" />
+  <label for="subject">diagnosis for:</label>
+  <input type="text" name="subject" placeholder="EX: soft tissue" />
+  <br />
+  <label for="diagnosis"> diagnisis</label>
+  <input type="text" name="diagnosis" placeholder="EX: periodontitis" />
+  <br />
+  <input type="submit" value="submit" />
+</form>
+{{diagnosis_list}} {% for diagnosis_row in diagnosis_list: %}
+{{diagnosis_row['subject']}} : {{diagnosis_row['diagnosis']}} <br />
+{% endfor %} {% endblock %}

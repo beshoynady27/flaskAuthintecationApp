@@ -8,6 +8,10 @@
     <title>patient file</title>
     <link rel="stylesheet" href="/static/style.css" type="text/css">
     <style>
+       body{
+            overflow-x: hidden;
+            overflow-y: hidden;
+         }
 .patient_file_main_container{
     display: flex;
     flex-direction: column;
@@ -152,19 +156,19 @@
       </a>
     </div>
     <div>
-        <a href="/admin_panil" ><button class="button">admin panil</button></a>
+        <a href="/admin_panil" ><button class="button">Admin panil</button></a>
         
     </div>
 </nav>
 <div class="patient_file_main_container">
     <div class="patient_file_upper_container">
         <div class="patient_file_upper_container_1">
-            <h4>personal information</h1>
+            <h4>personal information</h4>
             {% for patient in patient_info %}
                 {% if patient['name'] == selected_patient_name:%}
                 
                     Id:              {{ patient['id'] }} <br>
-                    Name:            {{ patient['name'].strip('0123456789') }} <br>
+                    Name:           <b style="color: blue; font-size:larger;"><i> {{ patient['name'].strip('0123456789') }}</i></b> <br>
                     Gender:          {{ patient['gender'] }} <br>
                     Birth year:      {{ patient['birth_year'] }} <br>
                     Adress:          {{ patient['adress'] }} <br>
@@ -202,14 +206,17 @@
             <div class="patinet_file_appointments">
                 <table class="table table-hover">
                     <tr>
-                      <th>date</th>
-                      <th>time</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Room</th>
                     </tr>
                 {% for appointment in all_appointments : %}
 
                 <tr>
                     <td>{{ appointment['date'] }}</td>
                     <td>{{ appointment['time'] }}</td>
+                    <td>{{ appointment['room'] }}</td>
+
     
                 </tr>
                 
@@ -248,7 +255,7 @@
 
                     {% for operator in operator_info: %}
                         {% if operator['id'] == procedure['operator_id']:%}
-                    <td>{{ operator['name'] }}</td>
+                    <td>{{ operator['name'].strip('0123456789') }}</td>
                         {% endif %}
                     {% endfor %}
 
@@ -257,6 +264,16 @@
                     <td>{{ procedure['procedure_date'] }}</td>
                     <td>{{ procedure['price'] }}</td>
                     <td>{{ procedure['description'] }}</td>
+                    <td>
+                        <form action="/delet_procedure"  method="post">
+
+                            <input type="hidden" name="procedure_id" value="{{ procedure['id'] }}">
+                            <input type="hidden" name="selected_patient_name" value="{{ procedure['patient_name'] }}">
+
+                            <input type="submit" value="Delet">
+                        </form>
+                    </td>
+
 
                 {% endif %}
                 </tr>

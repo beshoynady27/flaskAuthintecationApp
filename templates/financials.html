@@ -19,6 +19,7 @@
         body{
           font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
           font-size: large;
+          overflow-x: hidden;
 
         }
         .financials_in::-webkit-scrollbar{
@@ -121,6 +122,9 @@
       }
 
       .financials_revenue{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
         background-color: white;
         margin: 1%;
         border-radius: 25px;
@@ -322,15 +326,7 @@
   </style>
 </head>
 <body>
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+  
     <nav class="index_nav" >
         <div >
           <a class="navbar-brand" href="#">
@@ -338,7 +334,7 @@
           </a>
         </div>
         <div>
-            <a href="/admin_panil"><button class="button_blue" style="height: 8vh;">admin panil</button></a>
+            <a href="/admin_panil"><button class="button_blue" style="height: 8vh;">Admin panil</button></a>
             
         </div>
     </nav>
@@ -476,7 +472,8 @@
     </div>
 
     <div class="financials_revenue">
-      <h1> total revenue: {{total_revenue_this_year}} </h1>
+      <h2> Total revenue this year: {{total_revenue_this_year}} </h2>
+      <h2> Total revenue this month: {{total_revenue_this_month}}</h2>
     </div>
 
 
@@ -508,7 +505,7 @@
                 </tr>
             {% endfor %}
           </table>
-        </p>
+        
       </div>
     </div>
 

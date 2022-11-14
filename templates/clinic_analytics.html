@@ -1,23 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clinic analytics</title>
-</head>
-<body>
-    <nav class="index_nav" >
-        <div >
-          <a class="navbar-brand" href="#">
-            <img src="/static/dental_manager_logo-removebg-preview.png" alt="" width="300" height=auto>
-          </a>
-        </div>
-        <div>
-            <a href="/admin_panil"><button class="button_blue" style="height: 8vh;">admin panil</button></a>
-            
-        </div>
+     <!--bootstrap-->
+     <link
+     href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+     rel="stylesheet"
+     integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+     crossorigin="anonymous"
+   />
+   <link rel="stylesheet" href="/static/style.css" type="text/css" />
+
+   <style>
+    .analitics_main_container{
+  height: 90vh;
+  width: 100vw;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+    .analitics_upper_container{
+      height: 50%;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .analitics_upper_sub_container{
+      height: 96%;
+      width: 50%;
+      margin: 1%;
+      padding: 1%;
+      background-color: white;
+      border-radius: 25px;
+    }
+
+    .analitics_lower_container{
+      height: 50%;
+      width: 100%;
+      margin: 2% 20% 1% 1%;
+      padding: 1%;
+      background-color: white;
+      border-radius: 25px;
+    }
+
+    .container_header{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+
+    
+    
+   </style>
+  </head>
+  <body>
+    <nav class="index_nav">
+      <div>
+        <a class="navbar-brand" href="#">
+          <img
+            src="/static/dental_manager_logo-removebg-preview.png"
+            alt=""
+            width="300"
+            height="auto"
+          />
+        </a>
+      </div>
+      <div>
+        <a href="/admin_panil"
+          ><button class="button_blue" style="height: 8vh">
+            admin panil
+          </button></a
+        >
+      </div>
     </nav>
-    TODO
-</body>
+    <div class="analitics_main_container">
+      <div class="analitics_upper_container">
+        <div class="analitics_upper_sub_container">
+          
+          Total patient number : {{total_patient_number}}<br>
+          New patients this month : {{patient_number_month}}<br>
+          New patients this year : {{patient_number_year}}<br>
+          total procedure number {{total_procedure_number}} <br>
+          number of procedures this month : {{procedure_number_month}}<br>
+          number of procedures this year : {{procedure_number_year }}<br>
+          
+        </div>
+        <div class="analitics_upper_sub_container">
+          <div class="container_header">
+            <h3>Number of procedures:</h3>
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="btnradio1">This month</label>
+            
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+              <label class="btn btn-outline-primary" for="btnradio2">3 months</label>
+            
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+              <label class="btn btn-outline-primary" for="btnradio3">This year</label>
+            </div>
+          </div>
+          Number of filling : {{operative_number_month}}<br>
+          Number of endo <br>
+          Number of crown <br>
+          Number of bridge <br>
+          Number of denture <br>
+          Number of scaling <br>
+          Number of surgery <br>
+          Number of implant <br>
+          Number of other <br>
+        </div>
+
+      </div>
+      <div class="analitics_lower_container">
+        Grapg of procedures month over month
+      </div>
+    </div>
+   
+  </body>
 </html>
