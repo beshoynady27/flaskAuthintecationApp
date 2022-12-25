@@ -8,6 +8,11 @@
 
     <!--bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <!--google font-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Tangerine"
+    />
     <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Tangerine">
     <title></title>
@@ -60,6 +65,10 @@
     border-radius: 25px;
     height: 10vh;
     padding: 1%;
+    background-image: url('/static/website_hover_backgrownd.png');
+          background-repeat: no-repeat;
+          background-size:cover;
+          color: white;
     transition: all .4s ease-in-out;
 }
 
@@ -91,10 +100,11 @@
 
       }
 
-      .txt_btn{
+      .container_header {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        
       }
       .financials_in_year{
         display: flex;
@@ -147,20 +157,22 @@
       }
 
       .financials_in:hover{
-        background-image: url('/static/website_hover_backgrownd.png');
+        /*background-image: url('/static/website_hover_backgrownd.png');
           background-repeat: no-repeat;
-          background-size:cover;
-          color: white;
+          background-size:cover;*/
+          border: solid;
+          border-color: rgb(250,66,112)  rgb(48,107,232);
           /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
           transform: scale(1.03);
       }
 
       .financials_out:hover{
-        background-image: url('/static/website_hover_backgrownd.png');
+        /*background-image: url('/static/website_hover_backgrownd.png');
           background-repeat: no-repeat;
-          background-size:cover;
-          color: white;
+          background-size:cover;*/
+          border: solid;
+          border-color: rgb(250,66,112)  rgb(48,107,232);
           /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
           transform: scale(1.03);
@@ -168,10 +180,12 @@
 
 
       .financials_revenue:hover{
-        background-image: url('/static/website_hover_backgrownd.png');
+        /*background-image: url('/static/website_hover_backgrownd.png');*/
           background-repeat: no-repeat;
           background-size:cover;
-          color: white;
+          border: solid;
+          border-color: rgb(250,66,112)  rgb(48,107,232);
+          
           /*background-image:linear-gradient(45deg, #0202ff75,  #e400007c ) ;*/
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
           transform: scale(1.03);
@@ -180,13 +194,13 @@
 
       .button{
     background-color:rgb(250,66,112);
-    width: 100%;
-    height: 70%;
+    width: 150px;
+    height: 50;
     margin: 1%;
     border-radius: 25px;
     border: none;
     color: white;
-    font-size: 20;
+    font-size: 25;
 }
 
 .button_white{
@@ -356,10 +370,11 @@
     
     <div class="financials_in_and_out">
       <div class="financials_in">
-        <div class="txt_btn">
+        <div class="container_header">
         <h1>In</h1>
         <button class="button" id="income_history_btn">Income history</button>
         </div>
+        <br>
         <div class="financials_in_month">
           <div class="financials_in_month_txt">
           
@@ -390,6 +405,7 @@
             <canvas id="month_income_chart" ></canvas>
           </div>
         </div>
+        <br>
         <h3>this year income</h3>
         <div class="financials_in_year">
           
@@ -424,10 +440,12 @@
       </div>
 
       <div class="financials_in">
-          <div class="txt_btn">
+          <div class="container_header">
           <h1>Out</h1>
           <button class="button" id="outcome_history_btn">Outcome history</button>
           </div>
+          <br>
+          
           <div class="financials_in_month">
             <div class="financials_in_month_txt">
               <h3>This month</h3>
@@ -447,6 +465,7 @@
               <canvas id="month_outcome_chart"></canvas>
             </div>
           </div>
+          <br>
           <h3>this year</h3>
           <div class="financials_in_year">
             <div class="financials_in_month_txt">
@@ -631,12 +650,12 @@
                   label: '# of Votes',
                   data: {{ month_income_chart_list | safe }},
                   backgroundColor: [
-                      'rgba(255, 99, 132, 0.7)',
-                      'rgba(54, 162, 235, 0.7)',
-                      'rgba(255, 206, 86, 0.7)',
-                      'rgba(75, 192, 192, 0.7)',
-                      'rgba(153, 102, 255, 0.7)',
-                      'rgba(255, 159, 64, 0.7)'
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
                   ],
                   borderColor: [
                       'rgba(255, 99, 132, 1)',
@@ -668,12 +687,12 @@
                   label: '# of Votes',
                   data: {{ year_income_chart_list | safe }},
                   backgroundColor: [
-                      'rgba(255, 99, 132, 0.7)',
-                      'rgba(54, 162, 235, 0.7)',
-                      'rgba(255, 206, 86, 0.7)',
-                      'rgba(75, 192, 192, 0.7)',
-                      'rgba(153, 102, 255, 0.7)',
-                      'rgba(255, 159, 64, 0.7)'
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
                   ],
                   borderColor: [
                       'rgba(255, 99, 132, 1)',
@@ -706,12 +725,12 @@
                   label: '# of Votes',
                   data: {{ year_outcome_chart_list | safe }},
                   backgroundColor: [
-                      'rgba(255, 99, 132, 0.7)',
-                      'rgba(54, 162, 235, 0.7)',
-                      'rgba(255, 206, 86, 0.7)',
-                      'rgba(75, 192, 192, 0.7)',
-                      'rgba(153, 102, 255, 0.7)',
-                      'rgba(255, 159, 64, 0.7)'
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
                   ],
                   borderColor: [
                       'rgba(255, 99, 132, 1)',
@@ -744,12 +763,12 @@
                   label: '# of Votes',
                   data: {{ month_outcome_chart_list | safe }},
                   backgroundColor: [
-                      'rgba(255, 99, 132, 0.7)',
-                      'rgba(54, 162, 235, 0.7)',
-                      'rgba(255, 206, 86, 0.7)',
-                      'rgba(75, 192, 192, 0.7)',
-                      'rgba(153, 102, 255, 0.7)',
-                      'rgba(255, 159, 64, 0.7)'
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
                   ],
                   borderColor: [
                       'rgba(255, 99, 132, 1)',

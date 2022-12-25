@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <!--google font-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Tangerine"
+    />
     <title>patient file</title>
     <link rel="stylesheet" href="/static/style.css" type="text/css">
     <style>
@@ -39,6 +44,9 @@
 }
 
 .patient_file_upper_container_2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 1%;
     width: 50%;
     background-color: white;
@@ -146,6 +154,101 @@
           background-color: rgba(92, 92, 92, 0.459);
           border-radius: 25px;
         }
+
+        .button_red {
+  background-color: red;
+  width: 100%;
+  height: 50;
+  margin-top: 2%;
+  margin-bottom: 5%;
+  border-radius: 25px;
+  border: none;
+  color: white;
+  font-size: 20;
+}
+
+
+
+.chart_upper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 45%;
+    
+    object-fit:cover;
+}
+
+.chart_element{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.chart_numbers{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.tooth_btn{
+    border: none;
+    background-color: white;
+    max-width: 65px;
+    max-height: 65px;
+    transition: all .4s ease-in-out;
+}
+
+.tooth_btn:hover{
+    transform: scale(1.5);
+}
+
+/*the modal*/
+.ur8_modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100vh; /* Full height */
+  overflow-y:hidden; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.ur8_modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  height: 80vh;
+  overflow-y: scroll;
+  border-radius: 25px;
+}
+
+
+/* The Close Button */
+.income_close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.income_close:hover,
+.income_close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
     </style>
 </head>
 <body>
@@ -166,7 +269,8 @@
             <h4>personal information</h4>
             {% for patient in patient_info %}
                 {% if patient['name'] == selected_patient_name:%}
-                
+                    {{ll1t.ll1}}
+                    {{ll1}}
                     Id:              {{ patient['id'] }} <br>
                     Name:           <b style="color: blue; font-size:larger;"><i> {{ patient['name'].strip('0123456789') }}</i></b> <br>
                     Gender:          {{ patient['gender'] }} <br>
@@ -183,14 +287,284 @@
         </div>
 
         <div class="patient_file_upper_container_2">
-            <div class="title_container">
+            <!--div class="title_container">
                 <h4>Diagnosis</h4>
                 <form name= 'name_form'action="/diagnosis" method="get">
                     <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
                     <input type="submit" value="+ Diagnosis" class='button_blue'>
                 </form>
+            </div-->
+            <div class="chart_upper">
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ur8">
+                    <input type="image" src="/static/ur8_E.png"  class='tooth_btn'>
+                </form>
+                <p>8</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="lr8">
+                    <input type="image" src="/static/lr8_E.png"  class='tooth_btn'>
+                </form>
+                
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ur7">
+                    <input type="image" src="/static/ur7_E.png"  class='tooth_btn'>
+                </form>
+                <p>7</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="lr7">
+                    <input type="image" src="/static/lr7_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ur6">
+                    <input type="image" src="/static/ur6_E.png"  class='tooth_btn'>
+                </form>
+                <p>6</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="lr6">
+                    <input type="image" src="/static/lr6_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ur5">
+                    <input type="image" src="/static/ur5_E.png"  class='tooth_btn'>
+                </form>
+                <p>5</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="lr5">
+                    <input type="image" src="/static/lr5_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ur4">
+                    <input type="image" src="/static/ur4_E.png"  class='tooth_btn'>
+                </form>
+                <p>4</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="lr4">
+                    <input type="image" src="/static/lr4_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ur3">
+                    <input type="image" src="/static/ur3_E.png"  class='tooth_btn'>
+                </form>
+                <p>3</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="lr3">
+                    <input type="image" src="/static/lr3_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ur2">
+                    <input type="image" src="/static/ur2_E.png"  class='tooth_btn'>
+                </form>
+                <p>2</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="lr2">
+                    <input type="image" src="/static/lr2_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ur1">
+                    <input type="image" src="/static/ur1_E.png"  class='tooth_btn'>
+                </form>
+                <p>1</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="lr1">
+                    <input type="image" src="/static/lr1_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ul1">
+                    <input type="image" src="/static/ul1_E.png"  class='tooth_btn'>
+                </form>
+                <p>1</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ll1">
+                    <input type="image" src="/static/ll1_E.png"  class='tooth_btn' id="ll1Tooth">
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ul2">
+                    <input type="image" src="/static/ul2_E.png"  class='tooth_btn'>
+                </form>
+                <p>2</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ll2">
+                    <input type="image" src="/static/ll2_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ul3">
+                    <input type="image" src="/static/ul3_E.png"  class='tooth_btn'>
+                </form>
+                <p>3</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ll3">
+                    <input type="image" src="/static/ll3-E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ul4">
+                    <input type="image" src="/static/ul4_E.png"  class='tooth_btn'>
+                </form>
+                <p>4</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ll4">
+                    <input type="image" src="/static/ll4_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ul5">
+                    <input type="image" src="/static/ul5_E.png"  class='tooth_btn'>
+                </form>
+                <p>5</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ll5">
+                    <input type="image" src="/static/ll5_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ul6">
+                    <input type="image" src="/static/ul6_E.png"  class='tooth_btn'>
+                </form>
+                <p>6</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ll6">
+                    <input type="image" src="/static/ll6_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ul7">
+                    <input type="image" src="/static/ul7_E.png"  class='tooth_btn'>
+                </form>
+                <p>7</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ll7">
+                    <input type="image" src="/static/ll7_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+            <div class="chart_element">
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ul8">
+                    <input type="image" src="/static/ul8_E.png"  class='tooth_btn'>
+                </form>
+                <p>8</p>
+                <form name= 'name_form'action="/diagnosis" method="get">
+                    <input type="hidden" name="patient_name" value="{{selected_patient_name}}">
+                    <input type="hidden" name="subject" value="ll8">
+                    <input type="image" src="/static/ll8_E.png"  class='tooth_btn'>
+                </form>
+            </div>
+        </div>
+            <!--div class="chart_upper">
+                <img src="/static/ul8_E.png" alt="">
+                <img src="/static/ul7_E.png" alt="">
+                <img src="/static/ul6_E.png" alt="">
+                <img src="/static/ul5_E.png" alt="">
+                <img src="/static/ul4_E.png" alt="">
+                <img src="/static/ul3_E.png" alt="">
+                <img src="/static/ul2_E.png" alt="">
+                <img src="/static/ul1_E.png" alt="">
+                <img src="/static/ur1_E.png" alt="">
+                <img src="/static/ur2_E.png" alt="">
+                <img src="/static/ur3_E.png" alt="">
+                <img src="/static/ur4_E.png" alt="">
+                <img src="/static/ur5_E.png" alt="">
+                <img src="/static/ur6_E.png" alt="">
+                <img src="/static/ur7_E.png" alt="">
+                <img src="/static/ur8_E.png" alt="">
+
             </div>
 
+            <div class="chart_numbers">
+                <p>8</p>
+                <p>7</p>
+                <p>6</p>
+                <p>5</p>
+                <p>4</p>
+                <p>3</p>
+                <p>2</p>
+                <p>1</p>
+                <p>1</p>
+                <p>2</p>
+                <p>3</p>
+                <p>4</p>
+                <p>5</p>
+                <p>6</p>
+                <p>7</p>
+                <p>8</p>
+
+
+            </div>
+
+            <div class="chart_upper">
+                <img src="/static/ll8_E.png" alt="">
+                <img src="/static/ll7_E.png" alt="">
+                <img src="/static/ll6_E.png" alt="">
+                <img src="/static/ll5_E.png" alt="">
+                <img src="/static/ll4_E.png" alt="">
+                <img src="/static/ll3_E.png" alt="">
+                <img src="/static/ll2_E.png" alt="">
+                <img src="/static/ll1_E.png" alt="">
+                <img src="/static/lr1_E.png" alt="">
+                <img src="/static/lr2_E.png" alt="">
+                <img src="/static/lr3_E.png" alt="">
+                <img src="/static/lr4_E.png" alt="">
+                <img src="/static/lr5_E.png" alt="">
+                <img src="/static/lr6_E.png" alt="">
+                <img src="/static/lr7_E.png" alt="">
+                <img src="/static/lr8_E.png" alt="">
+
+            </div-->
         </div>
 
         <div class="patient_file_upper_container_3">
@@ -245,6 +619,7 @@
             <th>procedure date</th>
             <th>price</th>
             <th>description</th>
+            <th></th>
         
             </tr>
             {% for procedure in procedure_info %}
@@ -270,7 +645,7 @@
                             <input type="hidden" name="procedure_id" value="{{ procedure['id'] }}">
                             <input type="hidden" name="selected_patient_name" value="{{ procedure['patient_name'] }}">
 
-                            <input type="submit" value="Delet">
+                            <input type="submit" value="Delet" class="button_red" style="height: 30; width: 70%">
                         </form>
                     </td>
 
@@ -289,5 +664,218 @@
     
 <!--img src="/static/UL1_sound_removebg.png" alt="" style="height: 200; width:auto;"-->
 </div>
+<div id="ur8_modal" class="ur8_modal">
+    <div class="ur8_modal-content">
+      <span class="income_close">&times;</span>
+      <p>
+        <form action="/diagnosis" name="diagnosis_form" method="post">
+            <input type="hidden" name="subject" value="ur1" />
+            <input type="hidden" name="patient_name" value="{{selected_patient_name}}" />
+            <input type="radio" name="diagnosis" id="" value="M" />missed
+            <input type="radio" name="diagnosis" id="" value="F" />filled
+            <input type="radio" name="diagnosis" id="" value="D" />decaied
+            <input type="radio" name="diagnosis" id="" value="RCT"/>root canal treated
+            <input type="radio" name="diagnosis" id="" value="I" />implant
+            <input type="radio" name="diagnosis" id="" value="C" />crown
+            <input type="submit" value="submit" />
+        </form>
+      </p>
+    </div>
+  </div>
+<script>
+
+var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+/*
+  var ll2= {{ ll2 | tojson}} ;
+  if (ll2 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll3= {{ ll3 | tojson}} ;
+  if (ll3 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll4= {{ ll4 | tojson}} ;
+  if (ll4 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll5= {{ ll5 | tojson}} ;
+  if (ll5 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll6= {{ ll6 | tojson}} ;
+  if (ll6 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll7= {{ ll7 | tojson}} ;
+  if (ll7 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll8= {{ ll8 | tojson}} ;
+  if (ll8 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+
+  var ll1= {{ ll1 | tojson}} ;
+  if (ll1 == "RCT") {
+    document.getElementById('ll1Tooth').src = "/static/ll1_RCT.png";
+  }
+  */
+    // ur8 MODAL
+// Get the modal
+var ur8_modal_modal = document.getElementById("ur8_modal");
+
+// Get the button that opens the modal
+var ur8_btn = document.getElementById("ur8_btn");
+
+// Get the <span> element that closes the modal
+var income_span = document.getElementsByClassName("income_close")[0];
+
+// When the user clicks on the button, open the modal
+ur8_btn.onclick = function() {
+  ur8_modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+income_span.onclick = function() {
+  ur8_modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == ur8_modal) {
+    ur8_modal.style.display = "none";
+  }
+}
+
+
+
+  
+
+
+</script>
 </body>
 </html>

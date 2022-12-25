@@ -122,13 +122,45 @@ class Appointments(db.Model):
         return '<Name %r>' % self.name
 
 
-class Diagnosis(db.Model):
-    __tablename__ = 'diagnosis'
+class TeethChart(db.Model):
+    __tablename__ = 'teeth_chart'
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, db.ForeignKey(
-        'patient.id'), nullable=False)
-    subject = db.Column(db.String)
-    diagnosis = db.Column(db.String)
+    patient_name = db.Column(db.String, db.ForeignKey(
+        'patient.name'), nullable=False)
+    ur1 = db.Column(db.String)
+    ur2 = db.Column(db.String)
+    ur3 = db.Column(db.String)
+    ur4 = db.Column(db.String)
+    ur5 = db.Column(db.String)
+    ur6 = db.Column(db.String)
+    ur7 = db.Column(db.String)
+    ur8 = db.Column(db.String)
+    ul1 = db.Column(db.String)
+    ul2 = db.Column(db.String)
+    ul3 = db.Column(db.String)
+    ul4 = db.Column(db.String)
+    ul5 = db.Column(db.String)
+    ul6 = db.Column(db.String)
+    ul7 = db.Column(db.String)
+    ul8 = db.Column(db.String)
+    lr1 = db.Column(db.String)
+    lr2 = db.Column(db.String)
+    lr3 = db.Column(db.String)
+    lr4 = db.Column(db.String)
+    lr5 = db.Column(db.String)
+    lr6 = db.Column(db.String)
+    lr7 = db.Column(db.String)
+    lr8 = db.Column(db.String)
+    ll1 = db.Column(db.String)
+    ll2 = db.Column(db.String)
+    ll3 = db.Column(db.String)
+    ll4 = db.Column(db.String)
+    ll5 = db.Column(db.String)
+    ll6 = db.Column(db.String)
+    ll7 = db.Column(db.String)
+    ll8 = db.Column(db.String)
+
+
 
     def __repr__(self):
         return '<Name %r>' % self.id
@@ -169,6 +201,8 @@ class PatientForm(FlaskForm):
     adress = StringField('Adress')
     birth_year = IntegerField('Birth year')
     medical_history = TextAreaField('Medical hitory', default='Medically free')
+
+
     submit = SubmitField('Submit')
 
 
@@ -189,16 +223,13 @@ class LoginForm(FlaskForm):
     submit = SubmitField('submit')
 
 
-class DiagnosisFormUL1(FlaskForm):
-    subject = HiddenField('subject')
-    patient_name = HiddenField('patient_name')
-    diagnosis = RadioField('diagnosis')
 
 
-class DiagnosisFormUL2(FlaskForm):
+
+class toothForm(FlaskForm):
     subject = HiddenField('subject')
     patient_name = HiddenField('patient_name')
-    diagnosis = RadioField('diagnosis')
+    tooth_condition = RadioField('diagnosis')
 
 
 class NameForm(FlaskForm):
@@ -434,10 +465,21 @@ def add_new_patient():
         birth_year = form.birth_year.data
         medical_history = form.medical_history.data
         user_id = flask_login.current_user.id
+        
 
         name_with_id = name + str(flask_login.current_user.id)
-
         today = date.today()
+
+        tooth = TeethChart(ur1='E',ur2='E',ur3='E',ur4='E',ur5='E',ur6='E',ur7='E',ur8='E',ul1='E',ul2='E',ul3='E',
+        ul4='E',ul5='E',ul6='E',ul7='E',ul8='E',lr1='E',lr2='E',lr3='E',lr4='E',lr5='E',lr6='E',lr7='E',lr8='E',ll1='E',ll2='E',
+        ll3='E',ll4='E',ll5='E',ll6='E',ll7='E',ll8='E', patient_name=name_with_id)
+        db.session.add(tooth)
+        db.session.commit()
+
+
+
+
+        
 
         patient = Patient(name=name_with_id, gender=gender, birth_year=birth_year, adress=adress,
                           email=email, phone_number=phone_number, medical_history=medical_history, user_id=user_id,
@@ -480,6 +522,7 @@ def patient_file():
         patient_info = Patient.query.all()
         procedure_info = Procedure.query.all()
         operator_info = Operator.query.all()
+        
 
     if name_form.validate_on_submit():
         selected_patient_name = name_form.name.data
@@ -512,12 +555,50 @@ def patient_file():
      patient_id=patient_id, operators=operators, procedure_form=procedure_form, hidden_form=hidden_form, operator_info=operator_info, appointment_form=appointment_form)
         '''
 
+    ll1t = TeethChart.query.filter(TeethChart.patient_name == selected_patient_name).first()
+    ll1 = ll1t.ll1
+    ll2 = ll1t.ll2
+    ll3 = ll1t.ll3
+    ll4 = ll1t.ll4
+    ll5 = ll1t.ll5
+    ll6 = ll1t.ll6
+    ll7 = ll1t.ll7
+    ll8 = ll1t.ll8
+    lr1 = ll1t.lr1
+    lr2 = ll1t.lr2
+    lr3 = ll1t.lr3
+    lr4 = ll1t.lr4
+    lr5 = ll1t.lr5
+    lr6 = ll1t.lr6
+    lr7 = ll1t.lr7
+    lr8 = ll1t.lr8
+    ul1 = ll1t.ul1
+    ul2 = ll1t.ul2
+    ul3 = ll1t.ul3
+    ul4 = ll1t.ul4
+    ul5 = ll1t.ul5
+    ul6 = ll1t.ul6
+    ul7 = ll1t.ul7
+    ul8 = ll1t.ul8
+    ur1 = ll1t.ur1
+    ur2 = ll1t.ur2
+    ur3 = ll1t.ur3
+    ur4 = ll1t.ur4
+    ur5 = ll1t.ur5
+    ur6 = ll1t.ur6
+    ur7 = ll1t.ur7
+    ur8 = ll1t.ur8
+    
+
     today = date.today()
     all_appointments = Appointments.query.order_by(Appointments.date).order_by(Appointments.time).filter(
         Appointments.user_id == flask_login.current_user.id).filter(Appointments.date > today).filter(Appointments.patient_name == selected_patient_name)
 
     return render_template('patient_file.html', patient_info=patient_info, procedure_info=procedure_info, selected_patient_name=selected_patient_name,
-                           patient_id=patient_id, hidden_form=hidden_form, operator_info=operator_info, all_appointments=all_appointments)
+            patient_id=patient_id, hidden_form=hidden_form, operator_info=operator_info, all_appointments=all_appointments,ll1t=ll1t, ll1=ll1,
+            ll2=ll2, ll3=ll3, ll4=ll4, ll5=ll5, ll6=ll6, ll7=ll7, ll8=ll8, ul1=ul1, ul2=ul2, ul3=ul3, ul4=ul4, ul5=ul5, ul6=ul6, ul7=ul7, ul8=ul8,
+            lr1=lr1, lr2=lr2, lr3=lr3, lr4=lr4, lr5=lr5, lr6=lr6, lr7=lr7, lr8=lr8, ur1=ur1, ur2=ur2, ur3=ur3, ur4=ur4, ur5=ur5, ur6=ur6, 
+            ur7=ur7, ur8=ur8)
 
 
 @app.route('/delet_procedure', methods=['GET', 'POST'])
@@ -627,37 +708,198 @@ def delet_procedure():
 def diagnosis():
     if request.method == 'GET':
         patient_name = request.args.get('patient_name')
+        subject = request.args.get('subject')
         #patient_name = request.form["patient_name"]
-    form1 = DiagnosisFormUL1()
-    ##############
-    diagnosis_list = Diagnosis.query.all()
+        
+        hidden_form=HiddenNameForm()
+        procedure_form=ProcedureForm()
+        procedure_types = ['Examination', 'Root canal treatment', 'Filling', 'Crown',
+                        'Bridge', 'Denture', 'Scaling', 'Extraction', 'Implant', 'Surgery', 'Other']
+        operators = Operator.query.filter(                Operator.user_id == flask_login.current_user.id)
+        operator_list = []
+
+        for operator in operators:
+            # operator.name.strip('1234567890')
+            operator_list.append(operator.name.strip('1234567890'))
+
+        procedure_form = ProcedureForm()
+        procedure_form.procedure_type.choices = procedure_types
+        #procedure_form.patient_name.data = selected_patient_name
+        procedure_form.operator_name.choices = operator_list
+        procedure_form.selected_patient_name.data = patient_name
+            #procedure_form.price.data = 0
+
+        
+
+        
+    
     if request.method == 'POST':
         #diagnosis =  request.form["diagnosis"]
         diagnosis = request.form['diagnosis']
         subject = request.form["subject"]
         patient_name = request.form["patient_name"]
 
+        if subject == 'ul1':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ul1 = diagnosis
+            db.session.commit()
+        elif subject == 'ul2':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ul2 = diagnosis
+            db.session.commit()
+        elif subject == 'ul3':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ul3 = diagnosis
+            db.session.commit()
+        elif subject == 'ul4':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ul4 = diagnosis
+            db.session.commit()
+        elif subject == 'ul5':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ul5 = diagnosis
+            db.session.commit()
+        elif subject == 'ul6':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ul6 = diagnosis
+            db.session.commit()
+        elif subject == 'ul7':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ul7 = diagnosis
+            db.session.commit()
+        elif subject == 'ul8':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ul28 = diagnosis
+            db.session.commit()
+        elif subject == 'ur1':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ur1 = diagnosis
+            db.session.commit()
+        elif subject == 'ur2':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ur2 = diagnosis
+            db.session.commit()
+        elif subject == 'ur3':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ur3 = diagnosis
+            db.session.commit()
+        elif subject == 'ur4':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ur4 = diagnosis
+            db.session.commit()
+        elif subject == 'ur5':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ur5 = diagnosis
+            db.session.commit()
+        elif subject == 'ur6':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ur6 = diagnosis
+            db.session.commit()
+        elif subject == 'ur7':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ur7 = diagnosis
+            db.session.commit()
+        elif subject == 'ur8':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ur8 = diagnosis
+            db.session.commit()
+        elif subject == 'll1':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ll1 = diagnosis
+            db.session.commit()
+        elif subject == 'll2':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ll2 = diagnosis
+            db.session.commit()
+        elif subject == 'll3':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ll3 = diagnosis
+            db.session.commit()
+        elif subject == 'll4':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ll4 = diagnosis
+            db.session.commit()
+        elif subject == 'll5':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ll5 = diagnosis
+            db.session.commit()
+        elif subject == 'll6':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ll6 = diagnosis
+            db.session.commit()
+        elif subject == 'll7':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ll7 = diagnosis
+            db.session.commit()
+        elif subject == 'll8':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.ll8 = diagnosis
+            db.session.commit()
+        elif subject == 'lr1':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.lr1 = diagnosis
+            db.session.commit()
+        elif subject == 'lr2':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.lr2 = diagnosis
+            db.session.commit()
+        elif subject == 'lr3':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.lr3 = diagnosis
+            db.session.commit()
+        elif subject == 'lr4':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.lr4 = diagnosis
+            db.session.commit()
+        elif subject == 'lr5':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.lr5 = diagnosis
+            db.session.commit()
+        elif subject == 'lr6':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.lr6 = diagnosis
+            db.session.commit()
+        elif subject == 'lr7':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.lr7 = diagnosis
+            db.session.commit()
+        elif subject == 'lr8':
+            tooth_patient = TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+            tooth_patient.lr8 = diagnosis
+            db.session.commit()
+        hidden_form = HiddenNameForm()
+
+        
+
+        procedure_types = ['Examination', 'Root canal treatment', 'Filling', 'Crown',
+                        'Bridge', 'Denture', 'Scaling', 'Extraction', 'Implant', 'Surgery', 'Other']
+        operators = Operator.query.filter(                Operator.user_id == flask_login.current_user.id)
+        operator_list = []
+
+        for operator in operators:
+            # operator.name.strip('1234567890')
+            operator_list.append(operator.name.strip('1234567890'))
+
+        procedure_form = ProcedureForm()
+        procedure_form.procedure_type.choices = procedure_types
+        #procedure_form.patient_name.data = selected_patient_name
+        procedure_form.operator_name.choices = operator_list
+        procedure_form.selected_patient_name.data = patient_name
+            #procedure_form.price.data = 0
+
         patient_id = db.session.query(Patient.id).filter(
             Patient.name == patient_name).scalar()
 
-        diagnosis_save = None
-        diagnosis_list = Diagnosis.query.all()
-        for diagnosis_row in diagnosis_list:
-            if diagnosis_row.diagnosis == diagnosis and diagnosis_row.subject == subject and diagnosis_row.patient_id == patient_id:
-                diagnosis_save = None
-            elif diagnosis_row.subject == subject and diagnosis_row.patient_id == patient_id:
-                diagnosis_save = None
-                diagnosis_row.diagnosis = diagnosis
-                db.session.commit()
-            else:
-                diagnosis_save = Diagnosis(
-                    diagnosis=diagnosis, subject=subject, patient_id=patient_id)
+        
 
-        if diagnosis_save:
-            db.session.add(diagnosis_save)
-            db.session.commit()
-
-    return render_template('diagnosis.html', patient_name=patient_name, diagnosis_list=diagnosis_list)
+    ##############
+    
+    tooth_row =  TeethChart.query.filter(TeethChart.patient_name==patient_name).first()
+    img_src = '/static/3root_molar_icon.png'
+    tooth = tooth_row.ul1
+    
+    return render_template('diagnosis.html', tooth=tooth, patient_name=patient_name, subject=subject, procedure_form=procedure_form,
+    hidden_form=hidden_form)
 
 
 @app.route('/added_procedure', methods=['GET', 'POST'])
@@ -699,6 +941,8 @@ def added_procedure():
             operator_name_with_id = operator_name + \
                 str(flask_login.current_user.id)
 
+            subject = request.form["subject"]
+
             procedure_date = datetime.now()
 
             patient_id = db.session.query(Patient.id).filter(
@@ -707,7 +951,7 @@ def added_procedure():
                 Operator.name == operator_name_with_id).scalar()
 
             # add the data to database
-            procedure = Procedure(procedure_type=procedure_type, tooth=tooth, price=price, procedure_date=procedure_date,
+            procedure = Procedure(procedure_type=procedure_type, tooth=subject, price=price, procedure_date=procedure_date,
                                   patient_name=selected_patient_name, operator_id=operator_id, description=description, user_id=flask_login.current_user.id)
             db.session.add(procedure)
             db.session.commit()
@@ -1148,7 +1392,25 @@ def clinic_analytics():
     procedure_number_year = Procedure.query.filter(Procedure.procedure_date>=this_year).filter(Procedure.user_id == flask_login.current_user.id).count()
     
 
-    examination_number_month = Procedure.query.filter(Procedure.procedure_date>=this_month).filter(Procedure.procedure_type == 'Examination').filter(Procedure.user_id == flask_login.current_user.id).count()
+
+    procedure_number_jan = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 1, 1)).filter(Procedure.procedure_date < datetime(datetime.now().year, 2, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_feb = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 2, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 3, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_mar = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 3, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 4, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_abr = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 4, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 5, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_may = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 5, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 6, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_jun = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 6, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 7, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_jul = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 7, 1) ).filter(Procedure.procedure_date < datetime(datetime.now().year, 8, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_aug = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 8, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 9, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_sep = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 9, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 10, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_oct = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 10, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 11, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_nov = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 11, 1) ).filter( Procedure.procedure_date < datetime(datetime.now().year, 12, 1) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+    procedure_number_dec = Procedure.query.filter(Procedure.procedure_date>=datetime(datetime.now().year, 12, 1) ).filter( Procedure.procedure_date <= datetime(datetime.now().year, 12, 31) ).filter(Procedure.user_id == flask_login.current_user.id).count()
+
+
+    month_over_month_list = [procedure_number_jan, procedure_number_feb, procedure_number_mar, procedure_number_abr, procedure_number_may,
+    procedure_number_jun, procedure_number_jul, procedure_number_aug, procedure_number_sep, procedure_number_oct, procedure_number_nov, procedure_number_dec]
+
+    
     filling_number_month = Procedure.query.filter(Procedure.procedure_date>=this_month).filter(Procedure.procedure_type == 'Filling').filter(Procedure.user_id == flask_login.current_user.id).count()
     rct_number_month = Procedure.query.filter(Procedure.procedure_date>=this_month).filter(Procedure.procedure_type == 'Root canal treatment').filter(Procedure.user_id == flask_login.current_user.id).count()
     surgery_number_month = Procedure.query.filter(Procedure.procedure_date>=this_month).filter(Procedure.procedure_type == 'Surgery').filter(Procedure.user_id == flask_login.current_user.id).count()
@@ -1161,7 +1423,11 @@ def clinic_analytics():
     other_number_month = Procedure.query.filter(Procedure.procedure_date>=this_month).filter(Procedure.procedure_type == 'Other').filter(Procedure.user_id == flask_login.current_user.id).count()
 
 
-    examination_number_year = Procedure.query.filter(Procedure.procedure_date>=this_year).filter(Procedure.procedure_type == 'Examination').filter(Procedure.user_id == flask_login.current_user.id).count()
+    month_chart_list = [filling_number_month, rct_number_month, surgery_number_month, crown_number_month, bridge_number_month, denture_number_month,
+    scaling_number_month, extraction_number_month, implant_number_month, other_number_month]
+
+
+    
     filling_number_year = Procedure.query.filter(Procedure.procedure_date>=this_year).filter(Procedure.procedure_type == 'Filling').filter(Procedure.user_id == flask_login.current_user.id).count()
     rct_number_year = Procedure.query.filter(Procedure.procedure_date>=this_year).filter(Procedure.procedure_type == 'Root canal treatment').filter(Procedure.user_id == flask_login.current_user.id).count()
     surgery_number_year = Procedure.query.filter(Procedure.procedure_date>=this_year).filter(Procedure.procedure_type == 'Surgery').filter(Procedure.user_id == flask_login.current_user.id).count()
@@ -1174,17 +1440,20 @@ def clinic_analytics():
     other_number_year = Procedure.query.filter(Procedure.procedure_date>=this_year).filter(Procedure.procedure_type == 'Other').filter(Procedure.user_id == flask_login.current_user.id).count()
 
 
+    year_chart_list = [filling_number_year, rct_number_year, surgery_number_year, crown_number_year, bridge_number_year, denture_number_year,
+    scaling_number_year, extraction_number_year, implant_number_year, other_number_year]
 
     
     return render_template('clinic_analytics.html', total_patient_number=total_patient_number, patient_number_month=patient_number_month,
     patient_number_year=patient_number_year, total_procedure_number=total_procedure_number, procedure_number_month=procedure_number_month,
-    procedure_number_year=procedure_number_year, filling_number_month=filling_number_month, examination_number_month=examination_number_month,
+    procedure_number_year=procedure_number_year, filling_number_month=filling_number_month,
     rct_number_month=rct_number_month, surgery_number_month=surgery_number_month, crown_number_month=crown_number_month, bridge_number_month=bridge_number_month,
     denture_number_month=denture_number_month, scaling_number_month=scaling_number_month, extraction_number_month=extraction_number_month,
-    implant_number_month=implant_number_month, other_number_month=other_number_month, examination_number_year=examination_number_year, 
+    implant_number_month=implant_number_month, other_number_month=other_number_month, 
     filling_number_year=filling_number_year, rct_number_year=rct_number_year, surgery_number_year=surgery_number_year, crown_number_year=crown_number_year,
     bridge_number_year=bridge_number_year, denture_number_year=denture_number_year, scaling_number_year=scaling_number_year, extraction_number_year=extraction_number_year,
-    implant_number_year=implant_number_year, other_number_year=other_number_year)
+    implant_number_year=implant_number_year, other_number_year=other_number_year, month_chart_list=month_chart_list, year_chart_list=year_chart_list, 
+    month_over_month_list=month_over_month_list)
 
 
 '''
